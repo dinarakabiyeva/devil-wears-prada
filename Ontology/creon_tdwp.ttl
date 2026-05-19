@@ -1,0 +1,461 @@
+@prefix :      <http://creon-film.org/ontology/tdwp#> .
+@prefix creon: <http://creon.org/ontology#> .
+@prefix dul:   <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#> .
+@prefix fschema: <http://ontologydesignpatterns.org/ont/framester/framenet/abox/frame/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+
+# ═══════════════════════════════════════════════════════════════════
+#  ONTOLOGY DECLARATION
+# ═══════════════════════════════════════════════════════════════════
+
+<http://creon-film.org/ontology/tdwp>
+    a owl:Ontology ;
+    dc:title "CreOn-TDWP: Fashion Film Creativity Extension" ;
+    dc:description """Extension of the CreOn ontology modeling creativity
+    across The Devil Wears Prada (2006) and its sequel (2026).
+    Introduces FruitionContext, ReceptionShift, MediaIndustryPress,
+    and SequelProcess to address opera aperta and temporal reception.""" ;
+    dc:creator "University of Bologna — Knowledge Engineering 2025/2026" ;
+    owl:versionInfo "1.0.0" .
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  T-BOX: NEW CLASSES
+# ═══════════════════════════════════════════════════════════════════
+
+# ─── :FruitionContext ──────────────────────────────────────────────
+# A situation in which a CreativeProduct is received by an audience.
+# Subclass of CreativitySituation (CreOn core).
+# Models opera aperta: same product, different contexts over time.
+
+:FruitionContext
+    a owl:Class ;
+    rdfs:subClassOf creon:CreativitySituation ;
+    rdfs:label "Fruition Context"@en ;
+    rdfs:comment """A situated context in which a CreativeProduct is
+    experienced and interpreted by an audience. Distinct from the
+    production context (PersonalProcess) by its temporal and social
+    independence from the original creative agents."""@en .
+
+# Restriction: every FruitionContext must involve at least one agent
+:FruitionContext
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :hasAudienceAgent ;
+        owl:minCardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+# Restriction: every FruitionContext must interpret exactly one product
+:FruitionContext
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :interpretsFruitionOf ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+
+# ─── :ReceptionShift ──────────────────────────────────────────────
+# An event marking a change in how a CreativeProduct is interpreted
+# across two different FruitionContexts.
+# Models the opera aperta phenomenon at the event level.
+
+:ReceptionShift
+    a owl:Class ;
+    rdfs:subClassOf dul:Event ;
+    rdfs:label "Reception Shift"@en ;
+    rdfs:comment """An event in which the dominant interpretive frame
+    applied to a CreativeProduct changes from one FruitionContext to
+    another, driven by a change in CreativityPress."""@en .
+
+:ReceptionShift
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :shiftsInterpretationOf ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:ReceptionShift
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :fromContext ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+:ReceptionShift
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :toContext ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+
+# ─── :MediaIndustryPress ──────────────────────────────────────────
+# Specialization of CreativityPress for structural changes in the
+# media/entertainment industry (streaming, print decline, etc.)
+
+:MediaIndustryPress
+    a owl:Class ;
+    rdfs:subClassOf creon:CreativityPress ;
+    rdfs:label "Media Industry Press"@en ;
+    rdfs:comment """A CreativityPress arising from structural changes
+    in the media and entertainment industry, such as the rise of
+    streaming platforms and the decline of print journalism."""@en .
+
+
+# ─── :SequelProcess ───────────────────────────────────────────────
+# A PersonalProcess whose agents have previously produced a related
+# CreativeProduct through a prior PersonalProcess.
+
+:SequelProcess
+    a owl:Class ;
+    rdfs:subClassOf creon:PersonalProcess ;
+    rdfs:label "Sequel Creative Process"@en ;
+    rdfs:comment """A PersonalProcess in which the creative agents
+    revisit and extend a prior PersonalProcess and its CreativeProduct,
+    under a new CreativityPress context."""@en .
+
+:SequelProcess
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty :continuesFrom ;
+        owl:cardinality "1"^^xsd:nonNegativeInteger
+    ] .
+
+
+# ─── :ConceptualInterpretiveFrame ─────────────────────────────────
+# A conceptual frame (subclass of fschema:ConceptualFrame / CreOn
+# MetaConvergence) used to interpret a CreativeProduct in a context.
+
+:ConceptualInterpretiveFrame
+    a owl:Class ;
+    rdfs:subClassOf creon:MetaConvergence ;
+    rdfs:label "Conceptual Interpretive Frame"@en ;
+    rdfs:comment """A conceptual frame that organises the interpretation
+    of a CreativeProduct within a specific FruitionContext."""@en .
+
+
+# ─── Disjointness axioms ──────────────────────────────────────────
+# FruitionContext and PersonalProcess are disjoint:
+# reception is not production.
+
+[ a owl:AllDisjointClasses ;
+  owl:members ( :FruitionContext creon:PersonalProcess ) ] .
+
+# ReceptionShift is not itself a CreativeProduct:
+[ a owl:AllDisjointClasses ;
+  owl:members ( :ReceptionShift creon:CreativeProduct ) ] .
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  T-BOX: NEW OBJECT PROPERTIES
+# ═══════════════════════════════════════════════════════════════════
+
+:hasReceptionContext
+    a owl:ObjectProperty ;
+    rdfs:domain creon:CreativeProduct ;
+    rdfs:range  :FruitionContext ;
+    rdfs:label  "has reception context"@en ;
+    rdfs:comment "Links a CreativeProduct to its FruitionContexts over time." .
+
+:interpretsFruitionOf
+    a owl:ObjectProperty ;
+    owl:inverseOf :hasReceptionContext ;
+    rdfs:domain :FruitionContext ;
+    rdfs:range  creon:CreativeProduct ;
+    rdfs:label  "interprets fruition of"@en .
+
+:hasAudienceAgent
+    a owl:ObjectProperty ;
+    rdfs:domain :FruitionContext ;
+    rdfs:range  dul:Agent ;
+    rdfs:label  "has audience agent"@en ;
+    rdfs:comment "The agent (individual viewer or audience class) in this context." .
+
+:interpretedThrough
+    a owl:ObjectProperty ;
+    rdfs:domain :FruitionContext ;
+    rdfs:range  :ConceptualInterpretiveFrame ;
+    rdfs:label  "interpreted through"@en ;
+    rdfs:comment "The conceptual frame applied in this reception context." .
+
+:shiftsInterpretationOf
+    a owl:ObjectProperty ;
+    rdfs:domain :ReceptionShift ;
+    rdfs:range  creon:CreativeProduct ;
+    rdfs:label  "shifts interpretation of"@en .
+
+:fromContext
+    a owl:ObjectProperty ;
+    rdfs:domain :ReceptionShift ;
+    rdfs:range  :FruitionContext ;
+    rdfs:label  "from context"@en .
+
+:toContext
+    a owl:ObjectProperty ;
+    rdfs:domain :ReceptionShift ;
+    rdfs:range  :FruitionContext ;
+    rdfs:label  "to context"@en .
+
+:triggeredByPress
+    a owl:ObjectProperty ;
+    rdfs:domain :ReceptionShift ;
+    rdfs:range  creon:CreativityPress ;
+    rdfs:label  "triggered by press"@en ;
+    rdfs:comment "The CreativityPress change that triggered this reception shift." .
+
+:continuesFrom
+    a owl:ObjectProperty ;
+    rdfs:domain :SequelProcess ;
+    rdfs:range  creon:PersonalProcess ;
+    rdfs:label  "continues from"@en ;
+    rdfs:comment "Links a sequel process to the original PersonalProcess it extends." .
+
+:hasSocialDomain
+    a owl:ObjectProperty ;
+    rdfs:domain creon:CreativitySituation ;
+    rdfs:range  dul:SocialObject ;
+    rdfs:label  "has social domain"@en ;
+    rdfs:comment "The social/cultural domain (e.g. fashion industry) in which creativity occurs." .
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  T-BOX: DATATYPE PROPERTIES
+# ═══════════════════════════════════════════════════════════════════
+
+:hasReceptionYear
+    a owl:DatatypeProperty ;
+    rdfs:domain :FruitionContext ;
+    rdfs:range  xsd:gYear ;
+    rdfs:label  "has reception year"@en .
+
+:hasBudgetUSD
+    a owl:DatatypeProperty ;
+    rdfs:domain creon:PersonalProcess ;
+    rdfs:range  xsd:integer ;
+    rdfs:label  "has budget (USD)"@en .
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  A-BOX: INDIVIDUALS
+# ═══════════════════════════════════════════════════════════════════
+
+# ─── PERSONS ──────────────────────────────────────────────────────
+
+:DavidFrankel
+    a dul:NaturalPerson ;
+    rdfs:label "David Frankel"@en ;
+    rdfs:comment "American film director; directed both TDWP 2006 and 2026." .
+
+:AlineBroshMcKenna
+    a dul:NaturalPerson ;
+    rdfs:label "Aline Brosh McKenna"@en ;
+    rdfs:comment "American screenwriter; wrote both TDWP 2006 and 2026." .
+
+:MerylStreep
+    a dul:NaturalPerson ;
+    rdfs:label "Meryl Streep"@en ;
+    rdfs:comment "Actress; plays Miranda Priestly in both films." .
+
+:AnneHathaway
+    a dul:NaturalPerson ;
+    rdfs:label "Anne Hathaway"@en ;
+    rdfs:comment "Actress; plays Andy Sachs in both films." .
+
+:LaurenWeisberger
+    a dul:NaturalPerson ;
+    rdfs:label "Lauren Weisberger"@en ;
+    rdfs:comment "Author of the 2003 source novel." .
+
+
+# ─── SOCIAL DOMAIN ────────────────────────────────────────────────
+
+:FashionIndustry
+    a dul:SocialObject ;
+    rdfs:label "Fashion Industry"@en ;
+    rdfs:comment """The social domain of haute couture, fashion journalism,
+    and luxury retail within which both films are set. Functions as a
+    CreativityPress and social context per Csikszentmihalyi's domain/field.""" .
+
+:HollywoodFilmIndustry
+    a dul:SocialObject ;
+    rdfs:label "Hollywood Film Industry"@en .
+
+
+# ─── PRESS CONTEXTS ───────────────────────────────────────────────
+
+:PrintMediaEra_2004
+    a :MediaIndustryPress ;
+    rdfs:label "Print media dominance era (2004)"@en ;
+    rdfs:comment """Pre-streaming era: print fashion magazines at peak influence,
+    Vogue as cultural arbiter, pre-social-media celebrity culture.""" .
+
+:StreamingEra_2024
+    a :MediaIndustryPress ;
+    rdfs:label "Streaming and digital disruption era (2024)"@en ;
+    rdfs:comment """Era of streaming dominance: print magazine circulation
+    collapsed, TikTok fashion culture, fast fashion vs sustainability debates,
+    AI-generated content entering creative industries.""" .
+
+:MeTooMovement_2017
+    a creon:CreativityPress ;
+    rdfs:label "#MeToo cultural shift (2017)"@en ;
+    rdfs:comment """Social movement reshaping how workplace power dynamics
+    and abusive leadership are interpreted in cultural products.""" .
+
+
+# ─── CREATIVE PROCESSES ───────────────────────────────────────────
+
+:TDWP2006_Production
+    a creon:PersonalProcess ;
+    rdfs:label "The Devil Wears Prada — Production (2006)"@en ;
+    rdfs:comment "The creative process producing the 2006 film." ;
+    creon:hasAgent :DavidFrankel, :AlineBroshMcKenna,
+                   :MerylStreep, :AnneHathaway ;
+    :hasBudgetUSD 35000000 ;
+    :hasSocialDomain :HollywoodFilmIndustry, :FashionIndustry ;
+    creon:hasPress :PrintMediaEra_2004 .
+
+:TDWP2026_Production
+    a :SequelProcess ;
+    rdfs:label "The Devil Wears Prada 2 — Production (2026)"@en ;
+    rdfs:comment "The sequel creative process, same agents, new press context." ;
+    creon:hasAgent :DavidFrankel, :AlineBroshMcKenna,
+                   :MerylStreep, :AnneHathaway ;
+    :hasBudgetUSD 100000000 ;
+    :hasSocialDomain :HollywoodFilmIndustry, :FashionIndustry ;
+    creon:hasPress :StreamingEra_2024 ;
+    :continuesFrom :TDWP2006_Production .
+
+
+# ─── CREATIVE PRODUCTS ────────────────────────────────────────────
+
+:TDWP_Film_2006
+    a creon:CreativeProduct ;
+    rdfs:label "The Devil Wears Prada (2006)"@en ;
+    rdfs:comment """The film produced by TDWP2006_Production. Functions as
+    an opera aperta: its meaning evolves across reception contexts.""" ;
+    :hasReceptionContext :Reception_2006_Original,
+                         :Reception_2017_PostMeToo,
+                         :Reception_2026_PostSequel .
+
+:TDWP_Film_2026
+    a creon:CreativeProduct ;
+    rdfs:label "The Devil Wears Prada 2 (2026)"@en ;
+    rdfs:comment "The sequel film produced by TDWP2026_Production." ;
+    :hasReceptionContext :Reception_2026_Premiere .
+
+:TDWP_SourceNovel
+    a creon:CreativeProduct ;
+    rdfs:label "The Devil Wears Prada — Novel (2003)"@en ;
+    rdfs:comment "Lauren Weisberger's 2003 source novel." .
+
+
+# ─── CONCEPTUAL INTERPRETIVE FRAMES ──────────────────────────────
+
+:Frame_AmbitionAndSuccess
+    a :ConceptualInterpretiveFrame ;
+    rdfs:label "Ambition and the price of success"@en ;
+    rdfs:comment "Dominant frame for original 2006 audiences: personal cost of career ambition." .
+
+:Frame_WorkplaceAbuse
+    a :ConceptualInterpretiveFrame ;
+    rdfs:label "Workplace abuse and toxic leadership"@en ;
+    rdfs:comment "Post-#MeToo frame: Miranda as symbol of abusive power in the workplace." .
+
+:Frame_NostalgiaForPrintEra
+    a :ConceptualInterpretiveFrame ;
+    rdfs:label "Nostalgia for the print media era"@en ;
+    rdfs:comment "Post-2026 frame: 2006 film as historical document of a vanishing media world." .
+
+:Frame_MediaSatire
+    a :ConceptualInterpretiveFrame ;
+    rdfs:label "Satire of fashion media culture"@en ;
+    rdfs:comment "Academic/critical frame: film as satire of luxury fashion journalism." .
+
+
+# ─── FRUITION CONTEXTS ────────────────────────────────────────────
+
+:Reception_2006_Original
+    a :FruitionContext ;
+    rdfs:label "Original theatrical release audience (2006)"@en ;
+    :hasReceptionYear "2006"^^xsd:gYear ;
+    :hasAudienceAgent :Audience_2006 ;
+    :interpretedThrough :Frame_AmbitionAndSuccess ;
+    :interpretsFruitionOf :TDWP_Film_2006 .
+
+:Reception_2017_PostMeToo
+    a :FruitionContext ;
+    rdfs:label "Post-MeToo re-reading (~2017)"@en ;
+    :hasReceptionYear "2017"^^xsd:gYear ;
+    :hasAudienceAgent :Audience_PostMeToo ;
+    :interpretedThrough :Frame_WorkplaceAbuse ;
+    :interpretsFruitionOf :TDWP_Film_2006 .
+
+:Reception_2026_PostSequel
+    a :FruitionContext ;
+    rdfs:label "Post-sequel re-viewing audience (2026)"@en ;
+    :hasReceptionYear "2026"^^xsd:gYear ;
+    :hasAudienceAgent :Audience_2026 ;
+    :interpretedThrough :Frame_NostalgiaForPrintEra ;
+    :interpretsFruitionOf :TDWP_Film_2006 .
+
+:Reception_2026_Premiere
+    a :FruitionContext ;
+    rdfs:label "Sequel premiere audience (May 2026)"@en ;
+    :hasReceptionYear "2026"^^xsd:gYear ;
+    :hasAudienceAgent :Audience_2026 ;
+    :interpretedThrough :Frame_MediaSatire ;
+    :interpretsFruitionOf :TDWP_Film_2026 .
+
+
+# ─── AUDIENCE AGENTS (generic classes as individuals) ─────────────
+
+:Audience_2006
+    a dul:CollectiveAgent ;
+    rdfs:label "General theatrical audience, 2006"@en .
+
+:Audience_PostMeToo
+    a dul:CollectiveAgent ;
+    rdfs:label "Socially aware audience post-2017"@en .
+
+:Audience_2026
+    a dul:CollectiveAgent ;
+    rdfs:label "Contemporary audience, 2026"@en .
+
+
+# ─── RECEPTION SHIFTS ─────────────────────────────────────────────
+
+:Shift_2006_to_PostMeToo
+    a :ReceptionShift ;
+    rdfs:label "Reception shift: ambition → workplace abuse"@en ;
+    :shiftsInterpretationOf :TDWP_Film_2006 ;
+    :fromContext :Reception_2006_Original ;
+    :toContext   :Reception_2017_PostMeToo ;
+    :triggeredByPress :MeTooMovement_2017 .
+
+:Shift_PostMeToo_to_2026
+    a :ReceptionShift ;
+    rdfs:label "Reception shift: workplace abuse → nostalgia for print era"@en ;
+    :shiftsInterpretationOf :TDWP_Film_2006 ;
+    :fromContext :Reception_2017_PostMeToo ;
+    :toContext   :Reception_2026_PostSequel ;
+    :triggeredByPress :StreamingEra_2024 .
+
+
+# ─── CREATIVITY SITUATIONS ────────────────────────────────────────
+
+:TDWP_CreativitySituation_2006
+    a creon:CreativitySituation ;
+    rdfs:label "Creativity situation — TDWP 2006"@en ;
+    creon:involves :TDWP2006_Production, :TDWP_Film_2006 ;
+    :hasSocialDomain :FashionIndustry .
+
+:TDWP_CreativitySituation_2026
+    a creon:CreativitySituation ;
+    rdfs:label "Creativity situation — TDWP 2026"@en ;
+    creon:involves :TDWP2026_Production, :TDWP_Film_2026 ;
+    :hasSocialDomain :FashionIndustry .
