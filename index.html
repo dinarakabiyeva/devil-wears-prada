@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreOn × TDWP — From Cerulean to Streaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0a0a0a;
+  --paper: #f5f0e8;
+  --cream: #ede8dc;
+  --accent: #c8102e;
+  --accent2: #1a3a5c;
+  --gold: #b8963e;
+  --muted: #6b6560;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Instrument Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 3rem;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(10,10,10,0.1);
+}
+
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--ink); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 72px;
+  overflow: hidden;
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 4rem 5rem 5rem;
+  position: relative;
+}
+
+.hero-issue {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  max-width: 420px;
+}
+
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hero-meta span {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hero-meta strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.hero-right {
+  background: var(--ink);
+  background-image: url('tdwp2_teaser_poster_united_kingdom_6a72f273.jpeg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-year-stack { position: relative; z-index: 2; }
+
+.hero-visual {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-big-year {
+  font-family: var(--serif);
+  font-size: 22vw;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  line-height: 1;
+  position: absolute;
+  user-select: none;
+}
+
+.hero-year-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+  padding: 3rem;
+}
+
+.year-pill {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.year-num {
+  font-family: var(--serif);
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 900;
+  color: var(--paper);
+  line-height: 1;
+}
+
+.year-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+  writing-mode: vertical-rl;
+}
+
+.year-divider {
+  width: 80px;
+  height: 1px;
+  background: var(--accent);
+  align-self: flex-end;
+  margin-bottom: 1rem;
+}
+
+/* ── SECTION BASE ── */
+section {
+  padding: 6rem 5rem;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.3;
+  max-width: 80px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+  max-width: 700px;
+}
+
+/* ── ABOUT SECTION ── */
+.about {
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+}
+
+.about .section-label { color: var(--gold); }
+.about .section-title { color: var(--paper); }
+
+.about-body p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(245,240,232,0.75);
+  margin-bottom: 1.2rem;
+  max-width: 500px;
+}
+
+.about-body p strong {
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.about-sidebar {
+  padding-top: 0.5rem;
+}
+
+.theory-card {
+  border: 1px solid rgba(245,240,232,0.12);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.theory-card::before {
+  content: attr(data-n);
+  position: absolute;
+  top: -0.7rem;
+  left: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  background: var(--ink);
+  padding: 0 0.4rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+}
+
+.theory-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--paper);
+  margin-bottom: 0.3rem;
+}
+
+.theory-desc {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: rgba(245,240,232,0.45);
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+/* ── STORIES SECTION ── */
+.stories { background: var(--cream); }
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 3rem;
+}
+
+.story-card {
+  background: var(--paper);
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+
+.story-card:hover { background: #fff; }
+
+.story-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.story-card:hover::before { transform: scaleX(1); }
+
+.story-letter {
+  font-family: var(--serif);
+  font-size: 5rem;
+  font-weight: 900;
+  color: rgba(10,10,10,0.06);
+  line-height: 1;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+}
+
+.story-tag {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.story-title {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+.story-text {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+/* ── CQs SECTION ── */
+.cqs { background: var(--paper); }
+
+.cqs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2.5rem;
+  font-size: 0.875rem;
+}
+
+.cqs-table thead tr {
+  border-bottom: 2px solid var(--ink);
+}
+
+.cqs-table th {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: var(--muted);
+}
+
+.cqs-table tbody tr {
+  border-bottom: 1px solid rgba(10,10,10,0.08);
+  transition: background 0.2s;
+}
+
+.cqs-table tbody tr:hover { background: var(--cream); }
+
+.cqs-table td {
+  padding: 1rem 1rem;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.cq-id {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.cq-type {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+}
+
+.cq-type.pos {
+  background: rgba(26,58,92,0.08);
+  color: var(--accent2);
+}
+
+.cq-type.neg {
+  background: rgba(200,16,46,0.08);
+  color: var(--accent);
+}
+
+/* ── ONTOLOGY SECTION ── */
+.ontology { background: var(--accent2); color: var(--paper); }
+.ontology .section-label { color: var(--gold); }
+.ontology .section-title { color: var(--paper); }
+
+.onto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+.onto-col h3 {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(245,240,232,0.15);
+}
+
+.class-item {
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(245,240,232,0.08);
+}
+
+.class-name {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+
+.class-parent {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: rgba(245,240,232,0.35);
+  margin-bottom: 0.5rem;
+}
+
+.class-desc {
+  font-size: 0.8rem;
+  color: rgba(245,240,232,0.6);
+  line-height: 1.55;
+}
+
+/* ── TURTLE SECTION ── */
+.turtle-section {
+  background: #0d1117;
+  padding: 5rem;
+}
+
+.turtle-section .section-label { color: var(--gold); }
+.turtle-section .section-title { color: var(--paper); }
+
+.code-block {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: #21262d;
+  border-bottom: 1px solid #30363d;
+}
+
+.code-filename {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #8b949e;
+  letter-spacing: 0.05em;
+}
+
+.code-lang {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.code-body {
+  padding: 1.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: #e6edf3;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.t-prefix { color: #ff7b72; }
+.t-class  { color: #79c0ff; }
+.t-prop   { color: #d2a8ff; }
+.t-val    { color: #a5d6ff; }
+.t-str    { color: #a5d6ff; }
+.t-comment{ color: #8b949e; font-style: italic; }
+.t-punct  { color: #8b949e; }
+
+/* ── SPARQL SECTION ── */
+.sparql-section {
+  background: var(--cream);
+  padding: 6rem 5rem;
+}
+
+.sparql-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.sparql-card {
+  background: var(--paper);
+  padding: 1.8rem;
+  border-left: 3px solid var(--accent2);
+}
+
+.sparql-card.negative { border-left-color: var(--accent); }
+
+.sparql-cq {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 0.5rem;
+}
+
+.sparql-card.negative .sparql-cq { color: var(--accent); }
+
+.sparql-q {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.sparql-expected {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  padding: 0.4rem 0.75rem;
+  background: var(--cream);
+  display: inline-block;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink);
+  color: rgba(245,240,232,0.4);
+  padding: 3rem 5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+}
+
+footer h4 {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+footer p, footer a {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.45);
+  text-decoration: none;
+}
+
+footer a:hover { color: var(--paper); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.fade-up:nth-child(1) { animation-delay: 0.1s; }
+.fade-up:nth-child(2) { animation-delay: 0.25s; }
+.fade-up:nth-child(3) { animation-delay: 0.4s; }
+.fade-up:nth-child(4) { animation-delay: 0.55s; }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink), transparent);
+  opacity: 0.12;
+}
+
+/* ── MOODBOARD ── */
+.moodboard-section {
+  background: var(--ink);
+  padding: 6rem 5rem;
+}
+.moodboard-section .section-label { color: var(--gold); }
+.moodboard-section .section-title { color: var(--paper); }
+.moodboard-sub {
+  font-size: 0.9rem;
+  color: rgba(245,240,232,0.45);
+  margin-bottom: 3rem;
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.moodboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 200px;
+  gap: 3px;
+}
+
+.mb-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.mb-item:hover { transform: scale(1.02); z-index: 2; }
+.mb-item:hover .mb-overlay { opacity: 0.25; }
+.mb-item:hover .mb-desc { transform: translateY(0); opacity: 1; }
+.mb-item:hover .mb-shimmer { opacity: 1; }
+
+.mb-tall { grid-row: span 2; }
+.mb-wide { grid-column: span 2; }
+
+/* hover description panel — slides up from bottom */
+.mb-desc {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.4rem 1.2rem 1.2rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 40%, transparent 100%);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.38s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+  z-index: 4;
+}
+.mb-desc-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--paper);
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+}
+.mb-desc-text {
+  font-size: 0.72rem;
+  color: rgba(245,240,232,0.82);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+.mb-desc-concept {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+
+/* animated shimmer on hover */
+.mb-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 0%, transparent 40%,
+    rgba(255,255,255,0.07) 50%,
+    transparent 60%, transparent 100%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  animation: shimmerSlide 1.4s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+@keyframes shimmerSlide {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ── MOODBOARD MODAL ── */
+.mb-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.mb-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mb-modal {
+  background: var(--paper);
+  max-width: 480px;
+  width: calc(100% - 3rem);
+  padding: 2.5rem;
+  position: relative;
+  transform: translateY(24px);
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.mb-modal-backdrop.open .mb-modal { transform: translateY(0); }
+.mb-modal-close {
+  position: absolute;
+  top: 1rem; right: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.3rem 0;
+}
+.mb-modal-close:hover { color: var(--ink); }
+.mb-modal-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.mb-modal-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+.mb-modal-text {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+}
+.mb-modal-concept {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--accent2);
+  padding: 0.6rem 0.8rem;
+  background: var(--cream);
+  border-left: 3px solid var(--accent2);
+  line-height: 1.5;
+}
+
+.mb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  transition: opacity 0.3s;
+}
+
+.mb-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+}
+.mb-pattern.stripes {
+  background-image: repeating-linear-gradient(
+    45deg, rgba(255,255,255,0.3) 0px, rgba(255,255,255,0.3) 1px,
+    transparent 1px, transparent 12px);
+}
+.mb-pattern.dots {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.mb-pattern.grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.mb-pattern.lines {
+  background-image: repeating-linear-gradient(
+    0deg, rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 1px,
+    transparent 1px, transparent 18px);
+}
+
+.mb-label {
+  position: absolute;
+  bottom: 1rem;
+  left: 1.2rem;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--paper);
+  z-index: 2;
+  line-height: 1.2;
+}
+.mb-sub {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: rgba(245,240,232,0.45);
+  z-index: 2;
+  text-transform: uppercase;
+}
+.mb-year {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: rgba(245,240,232,0.15);
+  z-index: 2;
+  line-height: 1;
+}
+.mb-text-big {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: rgba(245,240,232,0.12);
+  z-index: 2;
+  letter-spacing: -0.02em;
+}
+.mb-item.mb-wide .mb-text-big { font-size: 5rem; }
+
+/* ── USE CASES ── */
+.usecases-section {
+  background: var(--paper);
+  padding: 6rem 5rem;
+}
+
+.uc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 3rem;
+}
+
+.uc-card {
+  padding: 1.8rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  background: var(--cream);
+  transition: background 0.25s, transform 0.25s;
+  border-bottom: 3px solid transparent;
+}
+.uc-card:hover {
+  background: #fff;
+  transform: translateY(-3px);
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(10,10,10,0.08);
+}
+
+/* color accents by type */
+.uc-person  { border-bottom-color: var(--accent2); }
+.uc-product { border-bottom-color: var(--accent); }
+.uc-context { border-bottom-color: var(--gold); }
+.uc-shift   { border-bottom-color: #555; }
+.uc-press   { border-bottom-color: #3a7a3a; }
+.uc-domain  { border-bottom-color: #7a3a7a; }
+
+.uc-type {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.uc-person  .uc-type { color: var(--accent2); }
+.uc-product .uc-type { color: var(--accent); }
+.uc-context .uc-type { color: var(--gold); }
+
+.uc-initial {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  opacity: 0.18;
+}
+.uc-person  .uc-initial { color: var(--accent2); opacity: 0.25; }
+.uc-product .uc-initial { color: var(--accent); opacity: 0.25; }
+.uc-shift   .uc-initial { color: var(--ink); opacity: 0.12; }
+
+.uc-name {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 0.25rem;
+  color: var(--ink);
+}
+.uc-role {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 1rem;
+}
+.uc-uri {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0;
+  border-top: 1px solid rgba(10,10,10,0.08);
+}
+.uc-props {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.uc-props span {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+
+/* ── GRAPH SECTION ── */
+.graph-section {
+  background: var(--ink);
+  padding: 6rem 5rem;
+}
+.graph-section .section-label { color: var(--gold); }
+.graph-section .section-title { color: var(--paper); }
+.graph-section .graph-sub {
+  font-size: 0.88rem;
+  color: rgba(245,240,232,0.45);
+  margin-bottom: 2.5rem;
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.graph-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2rem;
+}
+.graph-tab {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  background: rgba(245,240,232,0.06);
+  color: rgba(245,240,232,0.4);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.graph-tab:hover { background: rgba(245,240,232,0.1); color: rgba(245,240,232,0.7); }
+.graph-tab.active { background: var(--accent); color: var(--paper); }
+.graph-tab-reset {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  background: rgba(245,240,232,0.04);
+  color: rgba(245,240,232,0.3);
+  border: 1px solid rgba(245,240,232,0.12);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+.graph-tab-reset:hover { background: rgba(245,240,232,0.1); color: rgba(245,240,232,0.6); }
+
+.graph-canvas-wrap {
+  position: relative;
+  background: #0d0d0d;
+  border: 1px solid rgba(245,240,232,0.08);
+  overflow: hidden;
+}
+
+#graph-canvas { display: block; width: 100%; cursor: grab; }
+#graph-canvas:active { cursor: grabbing; }
+
+.protege-views {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(245,240,232,0.08);
+}
+
+.protege-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.protege-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.protege-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.protege-figure img {
+  width: 100%;
+  border: 1px solid rgba(245,240,232,0.1);
+  border-radius: 4px;
+  display: block;
+}
+
+.protege-caption {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .protege-grid { grid-template-columns: 1fr; }
+}
+
+.graph-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.graph-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245,240,232,0.45);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graph-tooltip {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 0.75rem 1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+  max-width: 200px;
+  border-left: 3px solid var(--accent);
+}
+.graph-tooltip.visible { opacity: 1; }
+.graph-tooltip-type {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+.graph-tooltip-name {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+.graph-tooltip-uri {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--muted);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { min-height: 40vh; }
+  section { padding: 4rem 1.5rem; }
+  .about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+  .stories-grid { grid-template-columns: 1fr; }
+  .onto-grid { grid-template-columns: 1fr; }
+  .sparql-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; padding: 3rem 1.5rem; }
+  .turtle-section { padding: 4rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CreOn × TDWP</div>
+  <ul class="nav-links">
+    <li><a href="#about">Project</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="#cqs">CQs</a></li>
+    <li><a href="#ontology">Ontology</a></li>
+    <li><a href="#sparql">SPARQL</a></li>
+    <li><a href="#graph">Graph</a></li>
+    <li><a href="#moodboard">Moodboard</a></li>
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="https://github.com" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-left">
+    <div class="hero-issue fade-up">Knowledge Engineering · University of Bologna · 2025–2026</div>
+    <h1 class="hero-title fade-up">
+      From<br>
+      <em>Cerulean</em><br>
+      to Streaming
+    </h1>
+    <p class="hero-subtitle fade-up">
+      Modeling fashion film creativity across The Devil Wears Prada (2006–2026) using the CreOn OWL2 ontology.
+    </p>
+    <div class="hero-meta fade-up">
+      <span>Framework — <strong>CreOn + Rhodes' 4P Theory</strong></span>
+      <span>Method — <strong>eXtreme Design + OWL2 + SPARQL</strong></span>
+      <span>Supervisor — <strong>Prof. Aldo Gangemi</strong></span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-big-year">P</div>
+    <div class="hero-year-stack">
+      <div class="year-pill">
+        <div class="year-label">Original</div>
+        <div class="year-num">2006</div>
+      </div>
+      <div class="year-divider"></div>
+      <div class="year-pill">
+        <div class="year-label">Sequel</div>
+        <div class="year-num">2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <div class="section-label">About the project</div>
+    <h2 class="section-title">An ontology of creativity across twenty years of fashion film</h2>
+    <div class="about-body">
+      <p>This project extends <strong>CreOn</strong> — an integrated OWL2 ontology of creativity theories — by applying it to a concrete cultural artifact: the two <em>Devil Wears Prada</em> films, separated by twenty years.</p>
+      <p>The core contribution is the modeling of <strong>opera aperta</strong> and <strong>fruition</strong>: how the same CreativeProduct acquires different meanings across different reception contexts, driven by changes in CreativityPress.</p>
+      <p>We introduce four new classes — <strong>FruitionContext</strong>, <strong>ReceptionShift</strong>, <strong>MediaIndustryPress</strong>, and <strong>SequelProcess</strong> — directly addressing open questions in the CreOn research agenda.</p>
+    </div>
+  </div>
+  <div class="about-sidebar">
+    <div class="theory-card" data-n="Theory 01">
+      <div class="theory-name">Rhodes' 4P Theory</div>
+      <div class="theory-desc">Person · Process · Product · Press — the four dimensions of creativity mapped to the film's two productions</div>
+    </div>
+    <div class="theory-card" data-n="Theory 02">
+      <div class="theory-name">Csikszentmihalyi</div>
+      <div class="theory-desc">Domain/Field model — fashion industry as social domain, Hollywood as field of validation</div>
+    </div>
+    <div class="theory-card" data-n="Theory 03">
+      <div class="theory-name">Opera Aperta</div>
+      <div class="theory-desc">Same CreativeProduct, different meaning across FruitionContexts (2006 → #MeToo → 2026)</div>
+    </div>
+    <div class="theory-card" data-n="Theory 04">
+      <div class="theory-name">Corazza's Model</div>
+      <div class="theory-desc">Mental/social process — same creative agents, same social domain, radically different press context</div>
+    </div>
+  </div>
+</section>
+
+<!-- STORIES -->
+<section class="stories" id="stories">
+  <div class="section-label">Requirements</div>
+  <h2 class="section-title">Three stories, three dimensions of creativity</h2>
+
+  <div class="stories-grid">
+    <div class="story-card">
+      <div class="story-letter">A</div>
+      <div class="story-tag">Story A · Person + Process</div>
+      <h3 class="story-title">The Same Hands, Twenty Years Apart</h3>
+      <p class="story-text">David Frankel and Aline Brosh McKenna produced both films. In 2004, they worked within print-era Hollywood on a $35M budget. In 2024, the same agents returned to a $100M sequel in the streaming age, with the film itself explicitly addressing the death of print media. The PersonalProcess is structurally identical — but the CreativityPress transformed everything.</p>
+    </div>
+    <div class="story-card">
+      <div class="story-letter">B</div>
+      <div class="story-tag">Story B · Product + Press</div>
+      <h3 class="story-title">Cerulean as Cultural Memory</h3>
+      <p class="story-text">The 2006 film became a cultural phenomenon: it shaped fashion journalism's public image, made 'cerulean' a global reference, and turned Miranda Priestly into an archetype. When the sequel launched in 2026, audiences did not arrive with clean eyes — they brought twenty years of memes, reruns, and commentary. The original CreativeProduct's meaning had already shifted before the sequel existed.</p>
+    </div>
+    <div class="story-card">
+      <div class="story-letter">C</div>
+      <div class="story-tag">Story C · Opera Aperta</div>
+      <h3 class="story-title">Three Audiences, One Film</h3>
+      <p class="story-text">Audiences in 2006 read TDWP as a story about ambition and its cost. After #MeToo in 2017, the same film was reread through the lens of workplace abuse. In 2026, after the streaming sequel, the original became a nostalgic document of a vanished media world. The film did not change — its FruitionContexts did. This is opera aperta: the CreativeProduct is ontologically stable; its interpretive valence is not.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CQs -->
+<section class="cqs" id="cqs">
+  <div class="section-label">Requirements</div>
+  <h2 class="section-title">Competency Questions</h2>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0;max-width:600px;">Each CQ translates directly into a SPARQL unit test against the populated knowledge graph.</p>
+
+  <table class="cqs-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Competency Question</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cq-id">CQ1</td>
+        <td>Who are the agents of the PersonalProcess that produced TDWP (2006)?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ2</td>
+        <td>Which agents participated in both the 2006 and 2026 productions?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ3</td>
+        <td>What CreativityPress contexts are associated with each film's production?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ4</td>
+        <td>How many FruitionContexts does the 2006 film have?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ5</td>
+        <td>What interpretive frames are applied to the 2006 film, and in which years?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ6</td>
+        <td>Does the fashion industry function as social domain for both creativity situations?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">CQ7</td>
+        <td>What press change triggered each reception shift on the 2006 film?</td>
+        <td><span class="cq-type pos">Positive</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">NCQ1</td>
+        <td>Is a cultural reinterpretation (e.g. post-#MeToo reading) itself a new CreativeProduct?</td>
+        <td><span class="cq-type neg">Negative</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">NCQ2</td>
+        <td>Is the streaming platform (Disney+) a PersonalProcess agent?</td>
+        <td><span class="cq-type neg">Negative</span></td>
+      </tr>
+      <tr>
+        <td class="cq-id">NCQ3</td>
+        <td>Is the 2026 film's $100M budget a CreativeProduct?</td>
+        <td><span class="cq-type neg">Negative</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ONTOLOGY -->
+<section class="ontology" id="ontology">
+  <div class="section-label">T-Box</div>
+  <h2 class="section-title">New Classes & Properties</h2>
+
+  <div class="onto-grid">
+    <div class="onto-col">
+      <h3>New Classes</h3>
+      <div class="class-item">
+        <div class="class-name">:FruitionContext</div>
+        <div class="class-parent">rdfs:subClassOf creon:CreativitySituation</div>
+        <div class="class-desc">A situated context in which a CreativeProduct is received and interpreted by an audience, independent of the original production. Subclasses: TheatricalFruitionContext, StreamingFruitionContext, CriticalFruitionContext, SocialMediaFruitionContext.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:ReceptionShift</div>
+        <div class="class-parent">rdfs:subClassOf dul:Event</div>
+        <div class="class-desc">An event marking a change in dominant interpretive frame across two FruitionContexts, triggered by a CreativityPress change. Subclasses: SocialMovementShift, TechnologicalShift, HistoricalShift.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:MediaIndustryPress</div>
+        <div class="class-parent">rdfs:subClassOf creon:CreativityPress</div>
+        <div class="class-desc">Structural changes in the media/entertainment industry acting on PersonalProcess. Subclasses: PrintMediaPress, StreamingMediaPress, SocialMediaPress.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:CulturalPressEvent</div>
+        <div class="class-parent">rdfs:subClassOf creon:CreativityPress</div>
+        <div class="class-desc">A social or cultural event acting as CreativityPress on reception. Subclasses: SocialMovementPress, PoliticalPressEvent.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:SequelProcess</div>
+        <div class="class-parent">rdfs:subClassOf creon:PersonalProcess</div>
+        <div class="class-desc">A PersonalProcess whose agents revisit a prior PersonalProcess. Subclasses: DirectSequel, RevivalSequel.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:ConceptualInterpretiveFrame</div>
+        <div class="class-parent">rdfs:subClassOf creon:MetaConvergence</div>
+        <div class="class-desc">A conceptual frame organising interpretation of a CreativeProduct. Subclasses: FeministFrame, NostalgiaFrame, CareerNarrativeFrame, SatireFrame.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:FashionFilm</div>
+        <div class="class-parent">rdfs:subClassOf creon:CreativeProduct</div>
+        <div class="class-desc">A film whose primary creative domain is the fashion industry. Subclass: FashionFilmSequel.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:FilmRole · :AudienceType</div>
+        <div class="class-parent">rdfs:subClassOf dul:SocialObject · dul:CollectiveAgent</div>
+        <div class="class-desc">FilmRole subclasses: DirectorRole, ScreenwriterRole, ActorRole, ProducerRole. AudienceType subclasses: TheatricalAudience, StreamingAudience, CriticalAudience, CasualRewatchAudience.</div>
+      </div>
+    </div>
+    <div class="onto-col">
+      <h3>New Object Properties</h3>
+      <div class="class-item">
+        <div class="class-name">:hasReceptionContext</div>
+        <div class="class-parent">CreativeProduct → FruitionContext</div>
+        <div class="class-desc">Links a product to its reception contexts over time. Inverse: :interpretsFruitionOf.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:interpretedThrough</div>
+        <div class="class-parent">FruitionContext → ConceptualInterpretiveFrame</div>
+        <div class="class-desc">The conceptual frame applied in a given reception context.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:fromContext · :toContext</div>
+        <div class="class-parent">ReceptionShift → FruitionContext</div>
+        <div class="class-desc">Start and end FruitionContext of a ReceptionShift event.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:triggeredByPress</div>
+        <div class="class-parent">ReceptionShift → creon:CreativityPress</div>
+        <div class="class-desc">The press change that caused the reception shift.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:shiftsInterpretationOf</div>
+        <div class="class-parent">ReceptionShift → creon:CreativeProduct</div>
+        <div class="class-desc">The CreativeProduct whose interpretive frame shifts in this event.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:continuesFrom</div>
+        <div class="class-parent">SequelProcess → creon:PersonalProcess</div>
+        <div class="class-desc">Links a sequel process to its predecessor. Cardinality exactly 1.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:isSequelOf · :adaptedFrom</div>
+        <div class="class-parent">FashionFilmSequel → FashionFilm · FashionFilm → SourceNovel</div>
+        <div class="class-desc">Direct sequel and source-material links between creative products.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:hasSocialDomain · :hasAudienceAgent</div>
+        <div class="class-parent">CreativitySituation → SocialObject · FruitionContext → Agent</div>
+        <div class="class-desc">Social domain and audience agent links in creativity and reception contexts.</div>
+      </div>
+      <h3 style="margin-top:2rem;">Datatype Properties</h3>
+      <div class="class-item">
+        <div class="class-name">:hasReceptionYear · :hasReleaseYear</div>
+        <div class="class-parent">FruitionContext → xsd:gYear · CreativeProduct → xsd:gYear</div>
+        <div class="class-desc">Year of a given reception context or original product release.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:hasBudgetUSD · :hasBoxOfficeUSD</div>
+        <div class="class-parent">PersonalProcess → xsd:integer · FashionFilm → xsd:integer</div>
+        <div class="class-desc">Production budget and total theatrical box office gross in USD.</div>
+      </div>
+      <div class="class-item">
+        <div class="class-name">:hasDurationMinutes · :hasProductionYear</div>
+        <div class="class-parent">FashionFilm → xsd:integer · PersonalProcess → xsd:gYear</div>
+        <div class="class-desc">Film duration in minutes and year production began.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TURTLE -->
+<section class="turtle-section" id="turtle">
+  <div class="section-label" style="color:var(--gold)">A-Box</div>
+  <h2 class="section-title" style="color:var(--paper)">Knowledge Graph (Turtle)</h2>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-filename">creon_tdwp.ttl</span>
+      <span class="code-lang">Turtle / OWL2</span>
+    </div>
+    <div class="code-body"><span class="t-comment"># CREATIVE PROCESSES</span>
+<span class="t-class">:TDWP2006_Production</span>
+    <span class="t-prop">a</span> <span class="t-val">creon:PersonalProcess</span> <span class="t-punct">;</span>
+    <span class="t-prop">rdfs:label</span> <span class="t-str">"The Devil Wears Prada — Production (2006)"</span> <span class="t-punct">;</span>
+    <span class="t-prop">creon:hasAgent</span> <span class="t-val">:DavidFrankel, :AlineBroshMcKenna</span> <span class="t-punct">;</span>
+    <span class="t-prop">:hasBudgetUSD</span> <span class="t-val">35000000</span> <span class="t-punct">;</span>
+    <span class="t-prop">creon:hasPress</span> <span class="t-val">:PrintMediaEra_2004</span> <span class="t-punct">.</span>
+
+<span class="t-class">:TDWP2026_Production</span>
+    <span class="t-prop">a</span> <span class="t-val">:SequelProcess</span> <span class="t-punct">;</span>
+    <span class="t-prop">creon:hasAgent</span> <span class="t-val">:DavidFrankel, :AlineBroshMcKenna</span> <span class="t-punct">;</span>
+    <span class="t-prop">:continuesFrom</span> <span class="t-val">:TDWP2006_Production</span> <span class="t-punct">;</span>
+    <span class="t-prop">creon:hasPress</span> <span class="t-val">:StreamingEra_2024</span> <span class="t-punct">.</span>
+
+<span class="t-comment"># OPERA APERTA — same film, three fruition contexts</span>
+<span class="t-class">:TDWP_Film_2006</span>
+    <span class="t-prop">a</span> <span class="t-val">creon:CreativeProduct</span> <span class="t-punct">;</span>
+    <span class="t-prop">:hasReceptionContext</span>  <span class="t-val">:Reception_2006_Original</span> <span class="t-punct">,</span>
+                           <span class="t-val">:Reception_2017_PostMeToo</span> <span class="t-punct">,</span>
+                           <span class="t-val">:Reception_2026_PostSequel</span> <span class="t-punct">.</span>
+
+<span class="t-comment"># RECEPTION SHIFT — #MeToo trigger</span>
+<span class="t-class">:Shift_2006_to_PostMeToo</span>
+    <span class="t-prop">a</span> <span class="t-val">:ReceptionShift</span> <span class="t-punct">;</span>
+    <span class="t-prop">:shiftsInterpretationOf</span> <span class="t-val">:TDWP_Film_2006</span> <span class="t-punct">;</span>
+    <span class="t-prop">:fromContext</span>  <span class="t-val">:Reception_2006_Original</span> <span class="t-punct">;</span>
+    <span class="t-prop">:toContext</span>    <span class="t-val">:Reception_2017_PostMeToo</span> <span class="t-punct">;</span>
+    <span class="t-prop">:triggeredByPress</span> <span class="t-val">:MeTooMovement_2017</span> <span class="t-punct">.</span></div>
+  </div>
+</section>
+
+<!-- SPARQL -->
+<section class="sparql-section" id="sparql">
+  <div class="section-label">Unit Tests</div>
+  <h2 class="section-title">SPARQL Queries</h2>
+
+  <div class="sparql-grid">
+    <div class="sparql-card">
+      <div class="sparql-cq">CQ1</div>
+      <div class="sparql-q">Who are the agents of the 2006 production?</div>
+      <div class="sparql-expected">→ Frankel, McKenna, Streep, Hathaway</div>
+    </div>
+    <div class="sparql-card">
+      <div class="sparql-cq">CQ2</div>
+      <div class="sparql-q">Which agents participated in both productions?</div>
+      <div class="sparql-expected">→ All four lead agents</div>
+    </div>
+    <div class="sparql-card">
+      <div class="sparql-cq">CQ4</div>
+      <div class="sparql-q">How many FruitionContexts does the 2006 film have?</div>
+      <div class="sparql-expected">→ COUNT = 3</div>
+    </div>
+    <div class="sparql-card">
+      <div class="sparql-cq">CQ5</div>
+      <div class="sparql-q">What interpretive frames are applied to the 2006 film and when?</div>
+      <div class="sparql-expected">→ Ambition(2006), Abuse(2017), Nostalgia(2026)</div>
+    </div>
+    <div class="sparql-card">
+      <div class="sparql-cq">CQ7</div>
+      <div class="sparql-q">What triggered each reception shift?</div>
+      <div class="sparql-expected">→ #MeToo → StreamingEra</div>
+    </div>
+    <div class="sparql-card negative">
+      <div class="sparql-cq">NCQ1</div>
+      <div class="sparql-q">Is a cultural reinterpretation a new CreativeProduct?</div>
+      <div class="sparql-expected">→ ASK false</div>
+    </div>
+    <div class="sparql-card negative">
+      <div class="sparql-cq">NCQ2</div>
+      <div class="sparql-q">Is the streaming platform a PersonalProcess agent?</div>
+      <div class="sparql-expected">→ ASK false</div>
+    </div>
+    <div class="sparql-card negative">
+      <div class="sparql-cq">NCQ3</div>
+      <div class="sparql-q">Is the $100M budget a CreativeProduct?</div>
+      <div class="sparql-expected">→ ASK false</div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- GRAPH -->
+<section class="graph-section" id="graph">
+  <div class="section-label">Knowledge Graph</div>
+  <h2 class="section-title">Ontology Visualisation</h2>
+  <p class="graph-sub">Interactive force-directed graph of the CreOn-TDWP ontology. Click nodes to inspect, drag to rearrange, scroll to zoom. Toggle between T-Box (classes) and A-Box (individuals) views.</p>
+
+  <div class="graph-tabs">
+    <button class="graph-tab active" onclick="showGraph('tbox')">T-Box — Classes</button>
+    <button class="graph-tab" onclick="showGraph('abox')">A-Box — Individuals</button>
+    <button class="graph-tab" onclick="showGraph('full')">Full Graph</button>
+    <button class="graph-tab-reset" onclick="resetView()">↺ Reset View</button>
+  </div>
+
+  <div class="graph-canvas-wrap">
+    <canvas id="graph-canvas" height="680"></canvas>
+    <div class="graph-tooltip" id="graph-tooltip">
+      <div class="graph-tooltip-type" id="tt-type"></div>
+      <div class="graph-tooltip-name" id="tt-name"></div>
+      <div class="graph-tooltip-uri" id="tt-uri"></div>
+    </div>
+  </div>
+
+  <div class="graph-legend">
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#c8102e"></div>CreativeProduct</div>
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#1a3a5c"></div>PersonalProcess</div>
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#b8963e"></div>FruitionContext</div>
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#4a7c59"></div>CreativityPress</div>
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#6b4c8c"></div>ReceptionShift</div>
+    <div class="graph-legend-item"><div class="legend-dot" style="background:#888"></div>NaturalPerson / Agent</div>
+  </div>
+
+  <!-- Protégé OntoGraf screenshots -->
+  <div class="protege-views">
+    <div class="protege-label">Ontology views from Protégé — OntoGraf</div>
+    <div class="protege-grid">
+      <figure class="protege-figure">
+        <img src="ontograf_tbox.png" alt="Protégé OntoGraf — T-Box core class hierarchy">
+        <figcaption class="protege-caption">Fig. 1 — T-Box: core CreOn-TDWP class hierarchy</figcaption>
+      </figure>
+      <figure class="protege-figure">
+        <img src="ontograf_tbox_full.png" alt="Protégé OntoGraf — Extended T-Box">
+        <figcaption class="protege-caption">Fig. 2 — T-Box: extended view with FruitionContext, ReceptionShift and subclasses</figcaption>
+      </figure>
+    </div>
+    <figure class="protege-figure" style="margin-top:1.5rem;">
+      <img src="ontograf_abox.png" alt="Protégé OntoGraf — A-Box named individuals">
+      <figcaption class="protege-caption">Fig. 3 — A-Box: named individuals — films, persons, reception contexts</figcaption>
+    </figure>
+  </div>
+</section>
+
+<script>
+(function(){
+const COLORS = {
+  product:  '#c8102e',
+  process:  '#1a3a5c',
+  fruition: '#b8963e',
+  press:    '#4a7c59',
+  shift:    '#6b4c8c',
+  agent:    '#777777',
+  domain:   '#3a6a7a',
+  core:     '#444444',
+};
+
+// ── T-BOX: all 37 classes ─────────────────────────────────────────
+const TBOX_NODES = [
+  // CreOn core (inherited)
+  {id:'CreativitySituation', label:'CreativitySituation', type:'core',    r:22},
+  {id:'PersonalProcess',     label:'PersonalProcess',     type:'process', r:22},
+  {id:'CreativeProduct',     label:'CreativeProduct',     type:'product', r:22},
+  {id:'CreativityPress',     label:'CreativityPress',     type:'press',   r:20},
+  {id:'MetaConvergence',     label:'MetaConvergence',     type:'core',    r:16},
+  {id:'NaturalPerson',       label:'dul:NaturalPerson',   type:'agent',   r:18},
+  {id:'CollectiveAgent',     label:'dul:CollectiveAgent', type:'agent',   r:16},
+  {id:'SocialObject',        label:'dul:SocialObject',    type:'domain',  r:16},
+  {id:'Event',               label:'dul:Event',           type:'core',    r:16},
+  // New classes
+  {id:'FruitionContext',         label:'FruitionContext',         type:'fruition', r:22},
+  {id:'TheatricalFruition',      label:'TheatricalFruition',      type:'fruition', r:15},
+  {id:'StreamingFruition',       label:'StreamingFruition',       type:'fruition', r:15},
+  {id:'CriticalFruition',        label:'CriticalFruition',        type:'fruition', r:15},
+  {id:'SocialMediaFruition',     label:'SocialMediaFruition',     type:'fruition', r:15},
+  {id:'ReceptionShift',          label:'ReceptionShift',          type:'shift',    r:20},
+  {id:'SocialMovementShift',     label:'SocialMovementShift',     type:'shift',    r:14},
+  {id:'TechnologicalShift',      label:'TechnologicalShift',      type:'shift',    r:14},
+  {id:'HistoricalShift',         label:'HistoricalShift',         type:'shift',    r:14},
+  {id:'MediaIndustryPress',      label:'MediaIndustryPress',      type:'press',    r:18},
+  {id:'PrintMediaPress',         label:'PrintMediaPress',         type:'press',    r:13},
+  {id:'StreamingMediaPress',     label:'StreamingMediaPress',     type:'press',    r:13},
+  {id:'SocialMediaPress',        label:'SocialMediaPress',        type:'press',    r:13},
+  {id:'CulturalPressEvent',      label:'CulturalPressEvent',      type:'press',    r:15},
+  {id:'SocialMovementPress',     label:'SocialMovementPress',     type:'press',    r:13},
+  {id:'PoliticalPressEvent',     label:'PoliticalPressEvent',     type:'press',    r:13},
+  {id:'SequelProcess',           label:'SequelProcess',           type:'process',  r:18},
+  {id:'DirectSequel',            label:'DirectSequel',            type:'process',  r:13},
+  {id:'RevivalSequel',           label:'RevivalSequel',           type:'process',  r:13},
+  {id:'InterpretiveFrame',       label:'ConceptualInterpretiveFrame', type:'fruition', r:17},
+  {id:'FeministFrame',           label:'FeministFrame',           type:'fruition', r:13},
+  {id:'NostalgiaFrame',          label:'NostalgiaFrame',          type:'fruition', r:13},
+  {id:'CareerNarrativeFrame',    label:'CareerNarrativeFrame',    type:'fruition', r:13},
+  {id:'SatireFrame',             label:'SatireFrame',             type:'fruition', r:13},
+  {id:'FashionFilm',             label:'FashionFilm',             type:'product',  r:18},
+  {id:'FashionFilmSequel',       label:'FashionFilmSequel',       type:'product',  r:14},
+  {id:'SourceNovel',             label:'SourceNovel',             type:'product',  r:14},
+  {id:'FilmRole',                label:'FilmRole',                type:'domain',   r:15},
+  {id:'AudienceType',            label:'AudienceType',            type:'agent',    r:15},
+  // FilmRole subclasses
+  {id:'DirectorRole',            label:'DirectorRole',            type:'domain',   r:11},
+  {id:'ScreenwriterRole',        label:'ScreenwriterRole',        type:'domain',   r:11},
+  {id:'ActorRole',               label:'ActorRole',               type:'domain',   r:11},
+  {id:'ProducerRole',            label:'ProducerRole',            type:'domain',   r:11},
+  // AudienceType subclasses
+  {id:'TheatricalAudience',      label:'TheatricalAudience',      type:'agent',    r:11},
+  {id:'StreamingAudience',       label:'StreamingAudience',       type:'agent',    r:11},
+  {id:'CriticalAudience',        label:'CriticalAudience',        type:'agent',    r:11},
+  {id:'CasualRewatchAudience',   label:'CasualRewatchAudience',   type:'agent',    r:11},
+];
+
+const TBOX_EDGES = [
+  // FruitionContext hierarchy
+  {s:'FruitionContext',     t:'CreativitySituation',   label:'subClassOf'},
+  {s:'TheatricalFruition',  t:'FruitionContext',        label:'subClassOf'},
+  {s:'StreamingFruition',   t:'FruitionContext',        label:'subClassOf'},
+  {s:'CriticalFruition',    t:'FruitionContext',        label:'subClassOf'},
+  {s:'SocialMediaFruition', t:'FruitionContext',        label:'subClassOf'},
+  // ReceptionShift hierarchy
+  {s:'ReceptionShift',      t:'Event',                 label:'subClassOf'},
+  {s:'SocialMovementShift', t:'ReceptionShift',        label:'subClassOf'},
+  {s:'TechnologicalShift',  t:'ReceptionShift',        label:'subClassOf'},
+  {s:'HistoricalShift',     t:'ReceptionShift',        label:'subClassOf'},
+  // Press hierarchy
+  {s:'MediaIndustryPress',  t:'CreativityPress',       label:'subClassOf'},
+  {s:'PrintMediaPress',     t:'MediaIndustryPress',    label:'subClassOf'},
+  {s:'StreamingMediaPress', t:'MediaIndustryPress',    label:'subClassOf'},
+  {s:'SocialMediaPress',    t:'MediaIndustryPress',    label:'subClassOf'},
+  {s:'CulturalPressEvent',  t:'CreativityPress',       label:'subClassOf'},
+  {s:'SocialMovementPress', t:'CulturalPressEvent',    label:'subClassOf'},
+  {s:'PoliticalPressEvent', t:'CulturalPressEvent',    label:'subClassOf'},
+  // SequelProcess hierarchy
+  {s:'SequelProcess',       t:'PersonalProcess',       label:'subClassOf'},
+  {s:'DirectSequel',        t:'SequelProcess',         label:'subClassOf'},
+  {s:'RevivalSequel',       t:'SequelProcess',         label:'subClassOf'},
+  // InterpretiveFrame hierarchy
+  {s:'InterpretiveFrame',   t:'MetaConvergence',       label:'subClassOf'},
+  {s:'FeministFrame',       t:'InterpretiveFrame',     label:'subClassOf'},
+  {s:'NostalgiaFrame',      t:'InterpretiveFrame',     label:'subClassOf'},
+  {s:'CareerNarrativeFrame',t:'InterpretiveFrame',     label:'subClassOf'},
+  {s:'SatireFrame',         t:'InterpretiveFrame',     label:'subClassOf'},
+  // FashionFilm hierarchy
+  {s:'FashionFilm',         t:'CreativeProduct',       label:'subClassOf'},
+  {s:'FashionFilmSequel',   t:'FashionFilm',           label:'subClassOf'},
+  {s:'SourceNovel',         t:'CreativeProduct',       label:'subClassOf'},
+  {s:'AudienceType',        t:'CollectiveAgent',       label:'subClassOf'},
+  {s:'FilmRole',            t:'SocialObject',          label:'subClassOf'},
+  // FilmRole subclasses
+  {s:'DirectorRole',        t:'FilmRole',              label:'subClassOf'},
+  {s:'ScreenwriterRole',    t:'FilmRole',              label:'subClassOf'},
+  {s:'ActorRole',           t:'FilmRole',              label:'subClassOf'},
+  {s:'ProducerRole',        t:'FilmRole',              label:'subClassOf'},
+  // AudienceType subclasses
+  {s:'TheatricalAudience',  t:'AudienceType',          label:'subClassOf'},
+  {s:'StreamingAudience',   t:'AudienceType',          label:'subClassOf'},
+  {s:'CriticalAudience',    t:'AudienceType',          label:'subClassOf'},
+  {s:'CasualRewatchAudience',t:'AudienceType',         label:'subClassOf'},
+  // Object properties
+  {s:'FruitionContext',     t:'CreativeProduct',       label:'interpretsFruitionOf'},
+  {s:'ReceptionShift',      t:'CreativeProduct',       label:'shiftsInterpretationOf'},
+  {s:'ReceptionShift',      t:'FruitionContext',       label:'fromContext'},
+  {s:'ReceptionShift',      t:'CreativityPress',       label:'triggeredByPress'},
+  {s:'FruitionContext',     t:'InterpretiveFrame',     label:'interpretedThrough'},
+  {s:'SequelProcess',       t:'PersonalProcess',       label:'continuesFrom'},
+  {s:'CreativitySituation', t:'SocialObject',          label:'hasSocialDomain'},
+];
+
+// ── A-BOX: all individuals ────────────────────────────────────────
+const ABOX_NODES = [
+  // Persons
+  {id:'Frankel',     label:'D. Frankel',      type:'agent',    r:17, uri:':DavidFrankel'},
+  {id:'McKenna',     label:'A. McKenna',      type:'agent',    r:16, uri:':AlineBroshMcKenna'},
+  {id:'Streep',      label:'M. Streep',       type:'agent',    r:16, uri:':MerylStreep'},
+  {id:'Hathaway',    label:'A. Hathaway',     type:'agent',    r:15, uri:':AnneHathaway'},
+  {id:'Blunt',       label:'E. Blunt',        type:'agent',    r:14, uri:':EmilyBlunt'},
+  {id:'Tucci',       label:'S. Tucci',        type:'agent',    r:14, uri:':StanleyTucci'},
+  {id:'Finerman',    label:'W. Finerman',     type:'agent',    r:13, uri:':WendyFinerman'},
+  {id:'Weisberger',  label:'L. Weisberger',   type:'agent',    r:13, uri:':LaurenWeisberger'},
+  // Productions
+  {id:'Prod2006',    label:'Production 2006', type:'process',  r:20, uri:':TDWP2006_Production'},
+  {id:'Prod2026',    label:'Production 2026', type:'process',  r:18, uri:':TDWP2026_Production'},
+  {id:'NovelProd',   label:'Novel Writing',   type:'process',  r:13, uri:':Weisberger_NovelWriting'},
+  // Creative products
+  {id:'Film2006',    label:'TDWP 2006',       type:'product',  r:22, uri:':TDWP_Film_2006'},
+  {id:'Film2026',    label:'TDWP 2026',       type:'product',  r:19, uri:':TDWP_Film_2026'},
+  {id:'Novel',       label:'Source Novel',    type:'product',  r:14, uri:':TDWP_SourceNovel'},
+  {id:'Miranda',     label:'Miranda Priestly',type:'product',  r:13, uri:':Miranda_Priestly_Character'},
+  {id:'Cerulean',    label:'Cerulean Scene',  type:'product',  r:12, uri:':Cerulean_Scene'},
+  // Press contexts
+  {id:'PrintPress',  label:'Print Era 2004',  type:'press',    r:16, uri:':PrintMediaEra_2004'},
+  {id:'StreamPress', label:'Streaming 2024',  type:'press',    r:16, uri:':StreamingEra_2024'},
+  {id:'SocialPress', label:'Social Media 2010s',type:'press',  r:14, uri:':SocialMediaEra_2010s'},
+  {id:'MeTooPress',  label:'#MeToo 2017',     type:'press',    r:15, uri:':MeTooMovement_2017'},
+  {id:'OscarsPress', label:'#OscarsSoWhite',  type:'press',    r:12, uri:':OscarsSoWhite_2016'},
+  {id:'CovidPress',  label:'Post-COVID 2021', type:'press',    r:13, uri:':PostCOVID_Cinema_2021'},
+  // Fruition contexts
+  {id:'RC2006T',     label:'Reception 2006',  type:'fruition', r:16, uri:':Reception_2006_Theatrical'},
+  {id:'RC2006C',     label:'Critical 2006',   type:'fruition', r:14, uri:':Reception_2006_Critical'},
+  {id:'RC2010s',     label:'Social Media 2010s',type:'fruition',r:14, uri:':Reception_2010s_SocialMedia'},
+  {id:'RCMetoo',     label:'#MeToo Reading',  type:'fruition', r:16, uri:':Reception_2017_PostMeToo'},
+  {id:'RCCovid',     label:'Post-COVID',      type:'fruition', r:14, uri:':Reception_2021_PostCOVID'},
+  {id:'RC2026',      label:'Reception 2026',  type:'fruition', r:15, uri:':Reception_2026_PostSequel'},
+  {id:'RC2026P',     label:'Premiere 2026',   type:'fruition', r:14, uri:':Reception_2026_Premiere'},
+  {id:'RC2026C',     label:'Critical 2026',   type:'fruition', r:13, uri:':Reception_2026_Critical'},
+  // Interpretive frames
+  {id:'FrAmbition',  label:'Ambition Frame',  type:'fruition', r:14, uri:':Frame_AmbitionAndSuccess'},
+  {id:'FrAbuse',     label:'Workplace Abuse', type:'fruition', r:14, uri:':Frame_WorkplaceAbuse'},
+  {id:'FrNostalgia', label:'Nostalgia Frame', type:'fruition', r:14, uri:':Frame_NostalgiaForPrintEra'},
+  {id:'FrSatire',    label:'Satire Frame',    type:'fruition', r:13, uri:':Frame_MediaSatire'},
+  {id:'FrFeminist',  label:'Fashion Feminism',type:'fruition', r:13, uri:':Frame_FashionAsFeminism'},
+  {id:'FrClass',     label:'Class & Labour',  type:'fruition', r:13, uri:':Frame_ClassAndLabour'},
+  // Reception shifts
+  {id:'Shift1',      label:'Shift→SocialMedia',type:'shift',   r:14, uri:':Shift_2006_to_SocialMedia'},
+  {id:'Shift2',      label:'Shift→#MeToo',    type:'shift',    r:15, uri:':Shift_SocialMedia_to_PostMeToo'},
+  {id:'Shift3',      label:'Shift→PostCOVID', type:'shift',    r:14, uri:':Shift_PostMeToo_to_PostCOVID'},
+  {id:'Shift4',      label:'Shift→2026',      type:'shift',    r:14, uri:':Shift_PostCOVID_to_2026'},
+  // Social domains
+  {id:'Fashion',     label:'Fashion Industry',type:'domain',   r:17, uri:':FashionIndustry'},
+  {id:'Hollywood',   label:'Hollywood',       type:'domain',   r:15, uri:':HollywoodFilmIndustry'},
+  {id:'Streaming',   label:'Streaming Industry',type:'domain', r:14, uri:':StreamingIndustry'},
+  // Creativity situations
+  {id:'Sit2006',     label:'Situation 2006',  type:'core',     r:14, uri:':TDWP_CreativitySituation_2006'},
+  {id:'Sit2026',     label:'Situation 2026',  type:'core',     r:14, uri:':TDWP_CreativitySituation_2026'},
+  {id:'SitNovel',    label:'Situation Novel', type:'core',     r:12, uri:':Novel_CreativitySituation'},
+  // Additional social domain
+  {id:'Luxury',      label:'Luxury Fashion',  type:'domain',   r:13, uri:':LuxuryFashionHouse'},
+];
+
+const ABOX_EDGES = [
+  // Productions → films
+  {s:'Prod2006', t:'Film2006',   label:'produces'},
+  {s:'Prod2026', t:'Film2026',   label:'produces'},
+  {s:'Prod2026', t:'Prod2006',   label:'continuesFrom'},
+  {s:'NovelProd',t:'Novel',      label:'produces'},
+  {s:'Film2006', t:'Novel',      label:'adaptedFrom'},
+  {s:'Film2026', t:'Film2006',   label:'isSequelOf'},
+  // Agents → productions
+  {s:'Frankel',    t:'Prod2006', label:'hasAgent'},
+  {s:'Frankel',    t:'Prod2026', label:'hasAgent'},
+  {s:'McKenna',    t:'Prod2006', label:'hasAgent'},
+  {s:'McKenna',    t:'Prod2026', label:'hasAgent'},
+  {s:'Streep',     t:'Prod2006', label:'hasAgent'},
+  {s:'Streep',     t:'Prod2026', label:'hasAgent'},
+  {s:'Hathaway',   t:'Prod2006', label:'hasAgent'},
+  {s:'Hathaway',   t:'Prod2026', label:'hasAgent'},
+  {s:'Tucci',      t:'Prod2006', label:'hasAgent'},
+  {s:'Tucci',      t:'Prod2026', label:'hasAgent'},
+  {s:'Blunt',      t:'Prod2006', label:'hasAgent'},
+  {s:'Weisberger', t:'NovelProd',label:'hasAgent'},
+  // Productions → press
+  {s:'Prod2006', t:'PrintPress',  label:'hasPress'},
+  {s:'Prod2026', t:'StreamPress', label:'hasPress'},
+  // Productions → social domains
+  {s:'Prod2006', t:'Fashion',    label:'hasSocialDomain'},
+  {s:'Prod2026', t:'Fashion',    label:'hasSocialDomain'},
+  {s:'Prod2026', t:'Streaming',  label:'hasSocialDomain'},
+  // Film 2006 → reception contexts
+  {s:'Film2006', t:'RC2006T',    label:'hasReceptionContext'},
+  {s:'Film2006', t:'RC2006C',    label:'hasReceptionContext'},
+  {s:'Film2006', t:'RC2010s',    label:'hasReceptionContext'},
+  {s:'Film2006', t:'RCMetoo',    label:'hasReceptionContext'},
+  {s:'Film2006', t:'RCCovid',    label:'hasReceptionContext'},
+  {s:'Film2006', t:'RC2026',     label:'hasReceptionContext'},
+  // Film 2026 → reception contexts
+  {s:'Film2026', t:'RC2026P',    label:'hasReceptionContext'},
+  {s:'Film2026', t:'RC2026C',    label:'hasReceptionContext'},
+  // Reception contexts → interpretive frames
+  {s:'RC2006T',  t:'FrAmbition', label:'interpretedThrough'},
+  {s:'RC2006C',  t:'FrSatire',   label:'interpretedThrough'},
+  {s:'RC2010s',  t:'FrAmbition', label:'interpretedThrough'},
+  {s:'RCMetoo',  t:'FrAbuse',    label:'interpretedThrough'},
+  {s:'RCCovid',  t:'FrNostalgia',label:'interpretedThrough'},
+  {s:'RC2026',   t:'FrNostalgia',label:'interpretedThrough'},
+  {s:'RC2026P',  t:'FrSatire',   label:'interpretedThrough'},
+  {s:'RC2026C',  t:'FrClass',    label:'interpretedThrough'},
+  // Reception shifts
+  {s:'Shift1', t:'RC2006T',    label:'fromContext'},
+  {s:'Shift1', t:'RC2010s',    label:'toContext'},
+  {s:'Shift1', t:'SocialPress',label:'triggeredByPress'},
+  {s:'Shift2', t:'RC2010s',    label:'fromContext'},
+  {s:'Shift2', t:'RCMetoo',    label:'toContext'},
+  {s:'Shift2', t:'MeTooPress', label:'triggeredByPress'},
+  {s:'Shift3', t:'RCMetoo',    label:'fromContext'},
+  {s:'Shift3', t:'RCCovid',    label:'toContext'},
+  {s:'Shift3', t:'CovidPress', label:'triggeredByPress'},
+  {s:'Shift4', t:'RCCovid',    label:'fromContext'},
+  {s:'Shift4', t:'RC2026',     label:'toContext'},
+  {s:'Shift4', t:'StreamPress',label:'triggeredByPress'},
+  // Shifts → films
+  {s:'Shift1', t:'Film2006',   label:'shiftsInterpretationOf'},
+  {s:'Shift2', t:'Film2006',   label:'shiftsInterpretationOf'},
+  {s:'Shift3', t:'Film2006',   label:'shiftsInterpretationOf'},
+  {s:'Shift4', t:'Film2006',   label:'shiftsInterpretationOf'},
+  // Situations
+  {s:'Sit2006', t:'Prod2006',  label:'involves'},
+  {s:'Sit2006', t:'Film2006',  label:'involves'},
+  {s:'Sit2026', t:'Prod2026',  label:'involves'},
+  {s:'Sit2026', t:'Film2026',  label:'involves'},
+  {s:'SitNovel',t:'NovelProd', label:'involves'},
+  {s:'SitNovel',t:'Novel',     label:'involves'},
+  {s:'SitNovel',t:'Fashion',   label:'hasSocialDomain'},
+];
+
+const FULL_NODES = [...TBOX_NODES, ...ABOX_NODES.map(n => ({...n, r: n.r - 4}))];
+const FULL_EDGES = [...TBOX_EDGES, ...ABOX_EDGES];
+
+let currentNodes = [], currentEdges = [];
+let sim = null, animId = null;
+const canvas = document.getElementById('graph-canvas');
+const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('graph-tooltip');
+let hoveredNode = null;
+let drag = null, panOffset = {x:0, y:0}, panStart = null;
+let scale = 1, targetScale = 1;
+let simSteps = 0;
+const MAX_SIM_STEPS = 250;
+
+function typeColor(type) {
+  return COLORS[type] || '#888';
+}
+
+function initPositions(nodes) {
+  const W = canvas.width || canvas.offsetWidth || 900, H = 680;
+  const cx = W / 2, cy = H / 2;
+  const count = nodes.length;
+  // Distribute in concentric rings so every node starts well-separated
+  const rings = [1, 8, 16, 24, 32]; // cumulative capacity per ring
+  let placed = 0;
+  nodes.forEach((n, i) => {
+    if (!n.x) {
+      // Which ring does this node fall into?
+      let ring = 0, offset = 0;
+      let cumulative = 0;
+      for (let r = 0; r < rings.length; r++) {
+        if (i < cumulative + rings[r]) { ring = r; offset = i - cumulative; break; }
+        cumulative += rings[r];
+        if (r === rings.length - 1) { ring = r; offset = i - cumulative; }
+      }
+      const ringRadius = ring === 0 ? 0 : (Math.min(W * 0.44, H * 0.44) * (ring / rings.length));
+      const angleStep = ring === 0 ? 0 : (2 * Math.PI / rings[ring]);
+      const angle = offset * angleStep + ring * 0.4; // stagger rings
+      n.x = cx + Math.cos(angle) * ringRadius + (Math.random() - 0.5) * 30;
+      n.y = cy + Math.sin(angle) * ringRadius + (Math.random() - 0.5) * 30;
+    }
+    n.vx = 0; n.vy = 0;
+    placed++;
+  });
+}
+
+function forceStep(nodes, edges) {
+  const W = canvas.width || canvas.offsetWidth || 900, H = 680;
+  // repulsion
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i+1; j < nodes.length; j++) {
+      const dx = nodes[j].x - nodes[i].x;
+      const dy = nodes[j].y - nodes[i].y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const force = 2800 / (d * d);
+      nodes[i].vx -= force * dx / d;
+      nodes[i].vy -= force * dy / d;
+      nodes[j].vx += force * dx / d;
+      nodes[j].vy += force * dy / d;
+    }
+  }
+  // attraction along edges
+  edges.forEach(e => {
+    const s = nodes.find(n => n.id === e.s);
+    const t = nodes.find(n => n.id === e.t);
+    if (!s || !t) return;
+    const dx = t.x - s.x, dy = t.y - s.y;
+    const d = Math.sqrt(dx*dx + dy*dy) || 1;
+    const target = 160;
+    const force = (d - target) * 0.015;
+    s.vx += force * dx / d; s.vy += force * dy / d;
+    t.vx -= force * dx / d; t.vy -= force * dy / d;
+  });
+  // centre gravity + damping + soft boundary
+  nodes.forEach(n => {
+    n.vx += (W/2 - n.x) * 0.003;
+    n.vy += (H/2 - n.y) * 0.003;
+    // soft boundary — push nodes gently away from edges
+    const margin = 80, bf = 0.08;
+    if (n.x < margin)     n.vx += bf * (margin - n.x);
+    if (n.x > W - margin) n.vx -= bf * (n.x - (W - margin));
+    if (n.y < margin)     n.vy += bf * (margin - n.y);
+    if (n.y > H - margin) n.vy -= bf * (n.y - (H - margin));
+    // damping
+    n.vx *= 0.85; n.vy *= 0.85;
+    if (!n.pinned) { n.x += n.vx; n.y += n.vy; }
+  });
+}
+
+function drawGraph() {
+  const W = canvas.width || canvas.offsetWidth || 900, H = 680;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(panOffset.x, panOffset.y);
+  ctx.scale(scale, scale);
+
+  // edges
+  currentEdges.forEach(e => {
+    const s = currentNodes.find(n => n.id === e.s);
+    const t = currentNodes.find(n => n.id === e.t);
+    if (!s || !t) return;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(t.x, t.y);
+    ctx.strokeStyle = 'rgba(245,240,232,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // arrow
+    const angle = Math.atan2(t.y - s.y, t.x - s.x);
+    const ar = t.r + 4;
+    const ax = t.x - Math.cos(angle) * ar;
+    const ay = t.y - Math.sin(angle) * ar;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(ax - 7*Math.cos(angle-0.4), ay - 7*Math.sin(angle-0.4));
+    ctx.lineTo(ax - 7*Math.cos(angle+0.4), ay - 7*Math.sin(angle+0.4));
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(245,240,232,0.2)';
+    ctx.fill();
+    // edge label midpoint
+    const mx = (s.x + t.x) / 2, my = (s.y + t.y) / 2;
+    ctx.font = '9px "DM Mono", monospace';
+    ctx.fillStyle = 'rgba(245,240,232,0.22)';
+    ctx.textAlign = 'center';
+    ctx.fillText(e.label, mx, my - 3);
+  });
+
+  // nodes
+  currentNodes.forEach(n => {
+    const isHovered = hoveredNode && hoveredNode.id === n.id;
+    const col = typeColor(n.type);
+    // glow on hover
+    if (isHovered) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = col + '33';
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = isHovered ? col : col + 'cc';
+    ctx.fill();
+    ctx.strokeStyle = isHovered ? '#f5f0e8' : col;
+    ctx.lineWidth = isHovered ? 2 : 1;
+    ctx.stroke();
+    // label
+    const label = n.label.length > 14 ? n.label.slice(0, 13) + '…' : n.label;
+    ctx.font = (isHovered ? 'bold ' : '') + '9px "DM Mono", monospace';
+    ctx.fillStyle = '#f5f0e8';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, n.x, n.y);
+  });
+
+  ctx.restore();
+}
+
+function animate() {
+  scale += (targetScale - scale) * 0.12;
+  if (simSteps < MAX_SIM_STEPS) {
+    // run 3 physics steps per frame so layout settles in ~1 second
+    forceStep(currentNodes, currentEdges);
+    forceStep(currentNodes, currentEdges);
+    forceStep(currentNodes, currentEdges);
+    simSteps += 3;
+  }
+  drawGraph();
+  animId = requestAnimationFrame(animate);
+}
+
+function getNodeAt(mx, my) {
+  // transform mouse to canvas space
+  const tx = (mx - panOffset.x) / scale;
+  const ty = (my - panOffset.y) / scale;
+  for (let i = currentNodes.length - 1; i >= 0; i--) {
+    const n = currentNodes[i];
+    const dx = tx - n.x, dy = ty - n.y;
+    if (Math.sqrt(dx*dx + dy*dy) <= n.r + 4) return n;
+  }
+  return null;
+}
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  if (drag) {
+    drag.node.x = (mx - panOffset.x) / scale;
+    drag.node.y = (my - panOffset.y) / scale;
+    drag.node.pinned = true;
+    return;
+  }
+  if (panStart) {
+    const W = canvas.width || 900, H = canvas.height || 560;
+    const margin = 120;
+    panOffset.x = Math.max(-(W * scale - margin), Math.min(W - margin, e.clientX - panStart.ox));
+    panOffset.y = Math.max(-(H * scale - margin), Math.min(H - margin, e.clientY - panStart.oy));
+    return;
+  }
+  const node = getNodeAt(mx, my);
+  hoveredNode = node;
+  if (node) {
+    tooltip.style.left = (mx + 16) + 'px';
+    tooltip.style.top  = (my - 10) + 'px';
+    document.getElementById('tt-type').textContent = node.type;
+    document.getElementById('tt-name').textContent = node.label;
+    document.getElementById('tt-uri').textContent = node.uri || ':' + node.id;
+    tooltip.classList.add('visible');
+  } else {
+    tooltip.classList.remove('visible');
+  }
+});
+
+canvas.addEventListener('mousedown', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const node = getNodeAt(mx, my);
+  if (node) {
+    drag = { node };
+  } else {
+    panStart = { ox: e.clientX - panOffset.x, oy: e.clientY - panOffset.y };
+  }
+});
+
+canvas.addEventListener('mouseup', () => { drag = null; panStart = null; });
+canvas.addEventListener('mouseleave', () => { drag = null; panStart = null; hoveredNode = null; tooltip.classList.remove('visible'); });
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  let dy = e.deltaY;
+  if (e.deltaMode === 1) dy *= 15;   // line mode → pixels
+  if (e.deltaMode === 2) dy *= 150;  // page mode → pixels
+  // proportional to scroll speed, capped so one fast swipe ≤ 0.04 change
+  const step = -Math.sign(dy) * Math.min(Math.abs(dy) * 0.0004, 0.04);
+  targetScale = Math.max(0.3, Math.min(3, targetScale + step));
+}, { passive: false });
+
+window.showGraph = function(mode) {
+  document.querySelectorAll('.graph-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  if (animId) cancelAnimationFrame(animId);
+  panOffset = {x:0, y:0}; scale = 1; targetScale = 1; simSteps = 0;
+  canvas.width = canvas.offsetWidth || 900;
+  if (mode === 'tbox') {
+    currentNodes = TBOX_NODES.map(n => ({...n, x:null, y:null}));
+    currentEdges = TBOX_EDGES;
+  } else if (mode === 'abox') {
+    currentNodes = ABOX_NODES.map(n => ({...n, x:null, y:null}));
+    currentEdges = ABOX_EDGES;
+  } else {
+    currentNodes = FULL_NODES.map(n => ({...n, x:null, y:null}));
+    currentEdges = FULL_EDGES;
+  }
+  initPositions(currentNodes);
+  animate();
+};
+
+window.resetView = function() {
+  panOffset = {x:0, y:0}; scale = 1; targetScale = 1;
+};
+
+// init — defer one frame so canvas has its layout width
+requestAnimationFrame(() => {
+  canvas.width = canvas.offsetWidth || 900;
+  simSteps = 0;
+  currentNodes = TBOX_NODES.map(n => ({...n, x:null, y:null}));
+  currentEdges = TBOX_EDGES;
+  initPositions(currentNodes);
+  animate();
+});
+
+window.addEventListener('resize', () => {
+  canvas.width = canvas.offsetWidth || 900;
+  panOffset = {x: 0, y: 0};
+  scale = 1; targetScale = 1; simSteps = 0;
+  currentNodes.forEach(n => { n.x = null; n.y = null; });
+  initPositions(currentNodes);
+});
+})();
+</script>
+
+
+<!-- MOODBOARD -->
+<section class="moodboard-section" id="moodboard">
+  <div class="section-label">Visual context</div>
+  <h2 class="section-title">Moodboard</h2>
+  <p class="moodboard-sub">The visual world of the two films — fashion, power, media, and the twenty-year shift in aesthetic language.</p>
+  <div class="moodboard-grid">
+
+    <div class="mb-item mb-tall" style="background:#1a1a1a;"
+         data-title="Print Era" data-desc="The age of glossy print magazines: Vogue at peak cultural influence, fashion editors as gatekeepers, the office tower of Runway as a fortress of taste. The 2006 film is inseparable from this media ecosystem." data-concept=":PrintMediaPress — CreativityPress of the 2004 production era">
+      <div class="mb-overlay"></div><div class="mb-pattern stripes"></div>
+      <div class="mb-label">Print Era</div><div class="mb-year">2006</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Print Era</div>
+        <div class="mb-desc-text">Vogue at peak influence, fashion editors as cultural gatekeepers.</div>
+        <div class="mb-desc-concept">:PrintMediaPress</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#2c1810;"
+         data-title="Haute Couture" data-desc="The film's visual world is built on real luxury fashion: Chanel, Dior, Prada, Valentino. Clothing is not decoration — it is argument, power, and identity. The cerulean belt speech makes this explicit." data-concept=":LuxuryFashionHouse — dul:SocialObject in the film's social domain">
+      <div class="mb-pattern dots"></div><div class="mb-overlay"></div>
+      <div class="mb-label">Haute Couture</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Haute Couture</div>
+        <div class="mb-desc-text">Real luxury brands as material argument — clothing as power.</div>
+        <div class="mb-desc-concept">:LuxuryFashionHouse</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#8b0000;"
+         data-title="Miranda Priestly" data-desc="A creon:CreativeProduct in her own right — a fictional character who escaped the film and became a cultural archetype for demanding bosses, toxic leadership, and brilliant tyranny." data-concept=":Miranda_Priestly_Character — creon:CreativeProduct that became a cultural archetype">
+      <div class="mb-overlay"></div>
+      <div class="mb-label">Miranda Priestly</div><div class="mb-sub">The Archetype</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Miranda Priestly</div>
+        <div class="mb-desc-text">A fictional character who became an archetype of demanding leadership — post-#MeToo, a symbol of workplace abuse.</div>
+        <div class="mb-desc-concept">:Miranda_Priestly_Character</div>
+      </div>
+    </div>
+
+    <div class="mb-item mb-wide" style="background:#0d0d0d;"
+         data-title="Runway Magazine" data-desc="The fictional magazine that structures the entire story. A stand-in for Vogue, its physical office, its editorial hierarchy, and its absolute authority over what is fashionable — and therefore what is culturally significant." data-concept=":FashionIndustry — dul:SocialObject · Csikszentmihalyi's Domain">
+      <div class="mb-pattern grid"></div><div class="mb-overlay"></div>
+      <div class="mb-text-big">RUNWAY</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Runway Magazine</div>
+        <div class="mb-desc-text">The social domain in which creativity is validated — the field in Csikszentmihalyi's model.</div>
+        <div class="mb-desc-concept">:FashionIndustry</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#c8102e;"
+         data-title="The Cerulean Belt" data-desc="The cerulean belt speech is the film's ontological core: Miranda explains how fashion choices trickle down from haute couture to mass market. Andy's sweater is 'cerulean' whether she knows it or not. This is the film's thesis on cultural power." data-concept=":Cerulean_Scene — creon:CreativeProduct · iconic cultural reference">
+      <div class="mb-overlay"></div>
+      <div class="mb-label">Cerulean</div><div class="mb-sub">The word that changed everything</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">The Cerulean Scene</div>
+        <div class="mb-desc-text">The film's thesis on cultural power — fashion choices as invisible force acting on everyone.</div>
+        <div class="mb-desc-concept">:Cerulean_Scene</div>
+      </div>
+    </div>
+
+    <div class="mb-item mb-tall" style="background:#1a3a5c;"
+         data-title="Streaming Era" data-desc="In 2024, the production context of the sequel is defined by Disney+ dominance, the collapse of print magazine culture, and an audience who met the original film on streaming rather than in a cinema. CreativityPress has fundamentally changed." data-concept=":StreamingMediaPress — structural shift in distribution and reception">
+      <div class="mb-pattern lines"></div><div class="mb-overlay"></div>
+      <div class="mb-label">Streaming Era</div><div class="mb-year">2026</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Streaming Era</div>
+        <div class="mb-desc-text">Disney+ dominance, print collapse — the press context of the 2026 sequel.</div>
+        <div class="mb-desc-concept">:StreamingMediaPress</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#2a2a2a;"
+         data-title="New York City" data-desc="The city is not backdrop — it is agent. New York's fashion geography (Fifth Avenue, Condé Nast tower, the Met) structures the film's spatial imagination and links to both the fashion industry domain and the Hollywood field of validation." data-concept=":FashionIndustry + :HollywoodFilmIndustry — dual social domains">
+      <div class="mb-pattern dots"></div><div class="mb-overlay"></div>
+      <div class="mb-label">New York City</div><div class="mb-sub">Fashion Capital</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">New York City</div>
+        <div class="mb-desc-text">The city structures the film's geography — linking fashion domain to Hollywood field.</div>
+        <div class="mb-desc-concept">:FashionIndustry · :HollywoodFilmIndustry</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#b8963e;"
+         data-title="$100M vs $35M" data-desc="The budget gap between the two productions ($35M in 2004, $100M in 2024) is a direct ontological trace of how CreativityPress changed: streaming platforms fund larger productions, and the sequel must justify itself at a higher commercial threshold." data-concept=":hasBudgetUSD — DatatypeProperty on creon:PersonalProcess">
+      <div class="mb-overlay"></div>
+      <div class="mb-label">$100M Budget</div><div class="mb-sub">vs $35M in 2006</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Budget as Press Trace</div>
+        <div class="mb-desc-text">The $65M gap between productions is a measurable imprint of how streaming changed production economics.</div>
+        <div class="mb-desc-concept">:hasBudgetUSD (PersonalProcess)</div>
+      </div>
+    </div>
+
+    <div class="mb-item mb-wide" style="background:#111;"
+         data-title="#MeToo 2017" data-desc="The most significant ReceptionShift in the ontology. #MeToo (2017) triggered a wholesale reinterpretation of Miranda Priestly: from brilliant-if-difficult boss to symbol of unchecked workplace abuse. The film did not change — its FruitionContext did." data-concept=":MeTooMovement_2017 — SocialMovementPress · triggers :Shift_SocialMedia_to_PostMeToo">
+      <div class="mb-pattern stripes"></div><div class="mb-overlay"></div>
+      <div class="mb-text-big">#MeToo</div>
+      <div class="mb-sub" style="position:absolute;bottom:1rem;right:1.5rem;color:rgba(255,255,255,0.35);font-size:0.55rem;font-family:var(--mono);letter-spacing:0.1em;text-transform:uppercase;z-index:3;">Reception Shift &middot; 2017</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">#MeToo Reception Shift</div>
+        <div class="mb-desc-text">Triggered SocialMovementShift: Miranda reread as abusive boss, not brilliant editor.</div>
+        <div class="mb-desc-concept">:MeTooMovement_2017 → :Shift_SocialMedia_to_PostMeToo</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#3d1f00;"
+         data-title="Opera Aperta" data-desc="Umberto Eco's concept: an open work. The 2006 film has been read through ambition, abuse, nostalgia, and satire — each interpretation is a distinct FruitionContext, not a misreading. The CreativeProduct is ontologically stable; its meaning is not." data-concept=":FruitionContext — the core new class modeling opera aperta reception">
+      <div class="mb-overlay"></div>
+      <div class="mb-label">Opera Aperta</div><div class="mb-sub">Same film, new meaning</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Opera Aperta</div>
+        <div class="mb-desc-text">The film is stable; its FruitionContexts multiply. Each reading is valid in its historical moment.</div>
+        <div class="mb-desc-concept">:FruitionContext (core ontology contribution)</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#0a0a2e;"
+         data-title="Disney+" data-desc="Disney+ is the distribution channel that defines the sequel's CreativityPress. It is not a PersonalProcess agent (NCQ2) — but it restructures the audience, the budget, the marketing timeline, and the interpretive expectations of every viewer." data-concept=":StreamingIndustry — dul:SocialObject · hasDistributionChannel on CreativeProduct">
+      <div class="mb-pattern grid"></div><div class="mb-overlay"></div>
+      <div class="mb-label">Disney+</div><div class="mb-sub">CreativityPress 2024</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Disney+</div>
+        <div class="mb-desc-text">Distribution channel shaping audience and budget — not an agent (NCQ2), but a structural press force.</div>
+        <div class="mb-desc-concept">:StreamingIndustry · :StreamingMediaPress</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#4a1a5c;"
+         data-title="Fashion as Power" data-desc="The film argues that fashion is not frivolous — it is a system of social power. Miranda's authority is expressed through clothing choices. The cerulean belt speech is the manifesto. In the sequel, fashion power dynamics have shifted as much as the media industry." data-concept=":FashionFilm — creon:CreativeProduct whose domain is the fashion industry as social power">
+      <div class="mb-overlay"></div>
+      <div class="mb-label">Fashion as Power</div><div class="mb-sub">Not frivolity — authority</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Fashion as Power</div>
+        <div class="mb-desc-text">Clothing in the film is argument, not decoration — fashion as a system of social authority.</div>
+        <div class="mb-desc-concept">:FashionFilm · :MediaIndustryPress</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#1a2a0a;"
+         data-title="The Sequel Gap" data-desc="Twenty years separate the two productions. The gap is not just time — it is a complete reorganisation of the media industry. The same PersonalProcess agents (Frankel, McKenna, Streep, Hathaway) return to a world in which their original creative product has already been multiply reinterpreted." data-concept=":RevivalSequel — SequelProcess subclass for hiatuses of 10+ years">
+      <div class="mb-pattern lines"></div><div class="mb-overlay"></div>
+      <div class="mb-label">The Sequel Gap</div><div class="mb-sub">Twenty years of press</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">The Sequel Gap</div>
+        <div class="mb-desc-text">20 years = a complete change in CreativityPress. Same agents, radically different context.</div>
+        <div class="mb-desc-concept">:RevivalSequel (SequelProcess subclass)</div>
+      </div>
+    </div>
+
+    <div class="mb-item" style="background:#2a1a00;"
+         data-title="Andy's Transformation" data-desc="Andy Sachs's arc — from unglamorous outsider to polished Runway assistant — is the film's PersonalProcess for her own creative becoming. In 2006 it was read as triumph; post-#MeToo as capitulation to a toxic system; in 2026 as ambiguous feminist reclamation." data-concept=":CareerNarrativeFrame + :FeministFrame — competing interpretive frames across FruitionContexts">
+      <div class="mb-pattern dots"></div><div class="mb-overlay"></div>
+      <div class="mb-label">Andy's Transformation</div><div class="mb-sub">Triumph or capitulation?</div>
+      <div class="mb-shimmer"></div>
+      <div class="mb-desc">
+        <div class="mb-desc-title">Andy's Transformation</div>
+        <div class="mb-desc-text">The same arc reads as triumph (2006), capitulation (#MeToo), and feminist agency (2026) — one character, three FruitionContexts.</div>
+        <div class="mb-desc-concept">:CareerNarrativeFrame · :FeministFrame</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MOODBOARD MODAL -->
+<div class="mb-modal-backdrop" id="mb-modal-backdrop">
+  <div class="mb-modal" id="mb-modal">
+    <button class="mb-modal-close" id="mb-modal-close">Close ✕</button>
+    <div class="mb-modal-label">Moodboard · Ontology Concept</div>
+    <div class="mb-modal-title" id="mb-modal-title"></div>
+    <div class="mb-modal-text" id="mb-modal-text"></div>
+    <div class="mb-modal-concept" id="mb-modal-concept"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const backdrop = document.getElementById('mb-modal-backdrop');
+  const modalTitle = document.getElementById('mb-modal-title');
+  const modalText  = document.getElementById('mb-modal-text');
+  const modalConcept = document.getElementById('mb-modal-concept');
+
+  document.querySelectorAll('.mb-item[data-title]').forEach(tile => {
+    tile.addEventListener('click', () => {
+      modalTitle.textContent   = tile.dataset.title;
+      modalText.textContent    = tile.dataset.desc;
+      modalConcept.textContent = tile.dataset.concept;
+      backdrop.classList.add('open');
+    });
+  });
+
+  document.getElementById('mb-modal-close').addEventListener('click', () => {
+    backdrop.classList.remove('open');
+  });
+
+  backdrop.addEventListener('click', e => {
+    if (e.target === backdrop) backdrop.classList.remove('open');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') backdrop.classList.remove('open');
+  });
+})();
+</script>
+
+<!-- USE CASES -->
+<section class="usecases-section" id="usecases">
+  <div class="section-label">A-Box individuals</div>
+  <h2 class="section-title">Use Cases</h2>
+  <p style="font-size:0.9rem;color:var(--muted);margin-bottom:0;max-width:560px;line-height:1.7;">Key individuals in the knowledge graph — each card is a named instance in the ontology.</p>
+  <div class="uc-grid">
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">DF</div>
+      <div class="uc-name">David Frankel</div>
+      <div class="uc-role">Director &middot; 2006 &amp; 2026</div>
+      <div class="uc-uri">:DavidFrankel</div>
+      <div class="uc-props"><span>creon:PersonalProcess &times;2</span><span>:SequelProcess &times;1</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">AB</div>
+      <div class="uc-name">Aline Brosh McKenna</div>
+      <div class="uc-role">Screenwriter &middot; 2006 &amp; 2026</div>
+      <div class="uc-uri">:AlineBroshMcKenna</div>
+      <div class="uc-props"><span>creon:PersonalProcess &times;2</span><span>:continuesFrom &times;1</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">EB</div>
+      <div class="uc-name">Emily Blunt</div>
+      <div class="uc-role">Actor · Emily Charlton · 2006</div>
+      <div class="uc-uri">:EmilyBlunt</div>
+      <div class="uc-props"><span>creon:hasAgent ×1</span><span>TDWP2006_Production only</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">ST</div>
+      <div class="uc-name">Stanley Tucci</div>
+      <div class="uc-role">Actor · Nigel · 2006 &amp; 2026</div>
+      <div class="uc-uri">:StanleyTucci</div>
+      <div class="uc-props"><span>creon:hasAgent ×2</span><span>PersonalProcess &amp; SequelProcess</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">WF</div>
+      <div class="uc-name">Wendy Finerman</div>
+      <div class="uc-role">Producer · 2006</div>
+      <div class="uc-uri">:WendyFinerman</div>
+      <div class="uc-props"><span>hasFilmRole :Role_Producer</span><span>TDWP2006_Production</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">LW</div>
+      <div class="uc-name">Lauren Weisberger</div>
+      <div class="uc-role">Author · Source Novel 2003</div>
+      <div class="uc-uri">:LaurenWeisberger</div>
+      <div class="uc-props"><span>:Weisberger_NovelWriting</span><span>creon:PersonalProcess</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">MS</div>
+      <div class="uc-name">Meryl Streep</div>
+      <div class="uc-role">Actor &middot; Miranda Priestly</div>
+      <div class="uc-uri">:MerylStreep</div>
+      <div class="uc-props"><span>creon:hasAgent &times;2</span><span>PersonalProcess &amp; SequelProcess</span></div>
+    </div>
+    <div class="uc-card uc-person">
+      <div class="uc-type">dul:NaturalPerson</div>
+      <div class="uc-initial">AH</div>
+      <div class="uc-name">Anne Hathaway</div>
+      <div class="uc-role">Actor &middot; Andy Sachs</div>
+      <div class="uc-uri">:AnneHathaway</div>
+      <div class="uc-props"><span>creon:hasAgent &times;2</span><span>PersonalProcess &amp; SequelProcess</span></div>
+    </div>
+    <div class="uc-card uc-product">
+      <div class="uc-type">creon:CreativeProduct</div>
+      <div class="uc-initial">06</div>
+      <div class="uc-name">TDWP Film 2006</div>
+      <div class="uc-role">The Original &mdash; Opera Aperta</div>
+      <div class="uc-uri">:TDWP_Film_2006</div>
+      <div class="uc-props"><span>:hasReceptionContext &times;3</span><span>Budget: $35M</span></div>
+    </div>
+    <div class="uc-card uc-product">
+      <div class="uc-type">creon:CreativeProduct</div>
+      <div class="uc-initial">26</div>
+      <div class="uc-name">TDWP Film 2026</div>
+      <div class="uc-role">The Sequel &mdash; SequelProcess</div>
+      <div class="uc-uri">:TDWP_Film_2026</div>
+      <div class="uc-props"><span>:continuesFrom 2006</span><span>Budget: $100M</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">:FruitionContext</div>
+      <div class="uc-initial">FC</div>
+      <div class="uc-name">Reception 2006</div>
+      <div class="uc-role">Ambition &amp; the Price of Success</div>
+      <div class="uc-uri">:Reception_2006_Original</div>
+      <div class="uc-props"><span>:interpretedThrough &times;1</span><span>:hasReceptionYear 2006</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">:FruitionContext</div>
+      <div class="uc-initial">FC</div>
+      <div class="uc-name">Reception #MeToo 2017</div>
+      <div class="uc-role">Workplace Abuse &amp; Toxic Power</div>
+      <div class="uc-uri">:Reception_2017_PostMeToo</div>
+      <div class="uc-props"><span>:interpretedThrough &times;1</span><span>:hasReceptionYear 2017</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">:FruitionContext</div>
+      <div class="uc-initial">FC</div>
+      <div class="uc-name">Reception 2026</div>
+      <div class="uc-role">Nostalgia for the Print Era</div>
+      <div class="uc-uri">:Reception_2026_PostSequel</div>
+      <div class="uc-props"><span>:interpretedThrough &times;1</span><span>:triggeredByPress streaming</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">:SocialMediaFruitionContext</div>
+      <div class="uc-initial">FC</div>
+      <div class="uc-name">Reception 2010s</div>
+      <div class="uc-role">Social Media Recontextualisation</div>
+      <div class="uc-uri">:Reception_2010s_SocialMedia</div>
+      <div class="uc-props"><span>:hasReceptionYear 2012</span><span>:interpretedThrough Ambition</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">:StreamingFruitionContext</div>
+      <div class="uc-initial">FC</div>
+      <div class="uc-name">Post-COVID Reception</div>
+      <div class="uc-role">Comfort streaming rewatch 2021</div>
+      <div class="uc-uri">:Reception_2021_PostCOVID</div>
+      <div class="uc-props"><span>:hasReceptionYear 2021</span><span>:interpretedThrough Nostalgia</span></div>
+    </div>
+    <div class="uc-card uc-shift">
+      <div class="uc-type">:TechnologicalShift</div>
+      <div class="uc-initial">&rarr;</div>
+      <div class="uc-name">Shift: 2006 &rarr; Social Media</div>
+      <div class="uc-role">Theatrical to meme culture</div>
+      <div class="uc-uri">:Shift_2006_to_SocialMedia</div>
+      <div class="uc-props"><span>:triggeredByPress SocialMediaEra</span><span>dul:Event</span></div>
+    </div>
+    <div class="uc-card uc-shift">
+      <div class="uc-type">:SocialMovementShift</div>
+      <div class="uc-initial">&rarr;</div>
+      <div class="uc-name">Shift: Social Media &rarr; #MeToo</div>
+      <div class="uc-role">Meme culture reread as abuse</div>
+      <div class="uc-uri">:Shift_SocialMedia_to_PostMeToo</div>
+      <div class="uc-props"><span>:triggeredByPress #MeToo</span><span>dul:Event</span></div>
+    </div>
+    <div class="uc-card uc-shift">
+      <div class="uc-type">:HistoricalShift</div>
+      <div class="uc-initial">&rarr;</div>
+      <div class="uc-name">Shift: #MeToo &rarr; Post-COVID</div>
+      <div class="uc-role">Abuse frame becomes nostalgia</div>
+      <div class="uc-uri">:Shift_PostMeToo_to_PostCOVID</div>
+      <div class="uc-props"><span>:triggeredByPress PostCOVID</span><span>dul:Event</span></div>
+    </div>
+    <div class="uc-card uc-shift">
+      <div class="uc-type">:TechnologicalShift</div>
+      <div class="uc-initial">&rarr;</div>
+      <div class="uc-name">Shift: Post-COVID &rarr; 2026</div>
+      <div class="uc-role">Nostalgia becomes print-era document</div>
+      <div class="uc-uri">:Shift_PostCOVID_to_2026</div>
+      <div class="uc-props"><span>:triggeredByPress StreamingEra</span><span>dul:Event</span></div>
+    </div>
+    <div class="uc-card uc-press">
+      <div class="uc-type">:MediaIndustryPress</div>
+      <div class="uc-initial">P</div>
+      <div class="uc-name">Print Media Era</div>
+      <div class="uc-role">CreativityPress &middot; 2004</div>
+      <div class="uc-uri">:PrintMediaEra_2004</div>
+      <div class="uc-props"><span>Vogue peak circulation</span><span>Pre-streaming Hollywood</span></div>
+    </div>
+    <div class="uc-card uc-press">
+      <div class="uc-type">:MediaIndustryPress</div>
+      <div class="uc-initial">P</div>
+      <div class="uc-name">Streaming Era</div>
+      <div class="uc-role">CreativityPress &middot; 2024</div>
+      <div class="uc-uri">:StreamingEra_2024</div>
+      <div class="uc-props"><span>Disney+ dominance</span><span>Print magazine decline</span></div>
+    </div>
+    <div class="uc-card uc-press">
+      <div class="uc-type">:SocialMovementPress</div>
+      <div class="uc-initial">P</div>
+      <div class="uc-name">#MeToo Movement</div>
+      <div class="uc-role">CulturalPressEvent &middot; 2017</div>
+      <div class="uc-uri">:MeTooMovement_2017</div>
+      <div class="uc-props"><span>Reshapes power dynamics reading</span><span>:triggeredByPress &times;1</span></div>
+    </div>
+    <div class="uc-card uc-press">
+      <div class="uc-type">:SocialMovementPress</div>
+      <div class="uc-initial">P</div>
+      <div class="uc-name">#OscarsSoWhite</div>
+      <div class="uc-role">CulturalPressEvent &middot; 2016</div>
+      <div class="uc-uri">:OscarsSoWhite_2016</div>
+      <div class="uc-props"><span>Diversity debate in Hollywood</span><span>SocialMovementPress</span></div>
+    </div>
+    <div class="uc-card uc-press">
+      <div class="uc-type">:CulturalPressEvent</div>
+      <div class="uc-initial">P</div>
+      <div class="uc-name">Post-COVID Cinema</div>
+      <div class="uc-role">CulturalPressEvent &middot; 2021</div>
+      <div class="uc-uri">:PostCOVID_Cinema_2021</div>
+      <div class="uc-props"><span>Nostalgia for classic films</span><span>:triggeredByPress &times;1</span></div>
+    </div>
+    <div class="uc-card uc-domain">
+      <div class="uc-type">dul:SocialObject</div>
+      <div class="uc-initial">FI</div>
+      <div class="uc-name">Fashion Industry</div>
+      <div class="uc-role">Social Domain &middot; Csikszentmihalyi</div>
+      <div class="uc-uri">:FashionIndustry</div>
+      <div class="uc-props"><span>:hasSocialDomain &times;2</span><span>Domain/Field model</span></div>
+    </div>
+    <div class="uc-card uc-domain">
+      <div class="uc-type">:ConceptualInterpretiveFrame</div>
+      <div class="uc-initial">IF</div>
+      <div class="uc-name">Frame: Cerulean Speech</div>
+      <div class="uc-role">MetaConvergence subclass</div>
+      <div class="uc-uri">:Frame_AmbitionAndSuccess</div>
+      <div class="uc-props"><span>:interpretedThrough &times;1</span><span>Dominant 2006</span></div>
+    </div>
+    <div class="uc-card uc-context">
+      <div class="uc-type">creon:PersonalProcess</div>
+      <div class="uc-initial">SP</div>
+      <div class="uc-name">Source Novel 2003</div>
+      <div class="uc-role">Lauren Weisberger &mdash; creon:CreativeProduct</div>
+      <div class="uc-uri">:TDWP_SourceNovel</div>
+      <div class="uc-props"><span>Basis of both films</span><span>Non-film CreativeProduct</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <h4>Project</h4>
+    <p>From Cerulean to Streaming<br>CreOn Extension — TDWP (2006–2026)<br> Dinara Kabieva - University of Bologna, 2025–2026</p>
+  </div>
+  <div>
+    <h4>Links</h4>
+    <p><a href="creon_tdwp.ttl">Download Ontology (.ttl)</a><br>
+    <a href="creon_tdwp_sparql.rq">Download SPARQL Queries (.rq)</a><br>
+    <a href="https://github.com/dinarakabiyeva" target="_blank">GitHub Repository</a><br>
+    <a href="https://studio-unibo.gitbook.io/lisontology_doc" target="_blank">CreOn Docs</a></p>
+  </div>
+  <div>
+    <h4>Framework</h4>
+    <p>CreOn · OWL2 · SPARQL 1.1<br>Rhodes' 4P · Opera Aperta<br>eXtreme Design Methodology<br>Prof. Aldo Gangemi</p>
+  </div>
+</footer>
+
+</body>
+</html>
