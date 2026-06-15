@@ -24,7 +24,7 @@ Two open research questions from the CreOn README motivated this project:
 
 ## Project Website
 
-🌐 **[View the project website](https://[your-github-username].github.io/[repo-name])**
+🌐 **[View the project website](https://dinarakabiyeva.github.io/devil-wears-prada/)**
 
 ---
 
