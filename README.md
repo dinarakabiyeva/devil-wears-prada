@@ -1,8 +1,8 @@
 # From Cerulean to Streaming
 ## Modeling Fashion Film Creativity in CreOn across The Devil Wears Prada (2006–2026)
 
-> **Knowledge Representation & Knowledge Engineering**
-> University of Bologna — Master's Programme in Artificial Intelligence — 2025/2026
+> **Knowledge Representation & Knowledge Extraction**
+> University of Bologna - Dinara Kabiyeva - 2025/2026
 > Supervisor: Prof. Aldo Gangemi
 
 ---
@@ -177,5 +177,3 @@ The `CreativeProduct` is ontologically stable. The `FruitionContext` evolves.
 - Rhodes, M. (1961). An analysis of creativity. *Phi Delta Kappan*, 42(7).
 
 ---
-
-*University of Bologna — KRKE 2025/2026*
